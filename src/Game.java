@@ -32,6 +32,7 @@ public class Game extends PApplet {
      */
     public void draw() {
         background(255);
+        rect(0,375, 800, 50);
         tickCount++;
         if(tickCount >= 60){
             tickCount = 0;

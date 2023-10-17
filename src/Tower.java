@@ -35,7 +35,7 @@ public class Tower {
     public void shoot(ArrayList<Tank> tanks, Game game){
         Tank currTarget = findTarget(tanks);
         if(currTarget != null){
-            Bullet bullet = new Bullet(currTarget, damage, x, y, (currTarget.getX()-x)/2, (currTarget.getY()-y)/2, 10);
+            Bullet bullet = new Bullet(currTarget, damage, x, y, (currTarget.getX()-x)/25, (currTarget.getY()-y)/25, 10);
             game.addToBulletList(bullet);
         }
     }
