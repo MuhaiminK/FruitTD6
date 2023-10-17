@@ -1,15 +1,29 @@
 import processing.core.PApplet;
 
+import java.util.ArrayList;
+
 public class Game extends PApplet {
     // TODO: declare game variables
+    private int money, tickCount, towerCost, wave,round;
+    private ArrayList<Tank> tankList;
+    private ArrayList<Bullet> bulletList;
+    private ArrayList<Tower> towerList;
+
 
     public void settings() {
-        size(800, 800);   // set the window size
-
+        size(800, 800);
     }
 
     public void setup() {
-        // TODO: initialize game variables
+        frameRate(60);
+        money = 300;
+        tankList = new ArrayList<Tank>();
+        bulletList = new ArrayList<Bullet>();
+        towerList = new ArrayList<Tower>();
+        tickCount = 0;
+        towerCost = 100;
+        wave = 0;
+        round = 0;
     }
 
     /***
@@ -17,11 +31,52 @@ public class Game extends PApplet {
      * tick each object (have it update itself), and draw each object
      */
     public void draw() {
-        background(255);    // paint screen white
-        fill(0,255,0);          // load green paint color
-        ellipse(mouseX, mouseY, 60, 60);  // draw circle at mouse loc
-        ellipse(mouseX - 80, mouseY, 60, 60);  // draw circle at mouse loc
-        ellipse(mouseX + 80, mouseY, 60, 60);  // draw circle at mouse loc
+        background(255);
+        tickCount++;
+        if(tickCount >= 60){
+            tickCount = 0;
+            tankList.add(new Tank(100+wave*15,30,400,1,0, 40));
+            round++;
+        }
+        if(round >= 15){
+            wave++;
+        }
+        //loop through tanks
+        for(int i = 0; i < tankList.size()-1; i++) {
+            Tank tank = tankList.get(i);
+            addMoney(tank.update(this));
+            if(!tank.isAlive()){
+                tankList.remove(tank);i--;
+            }
+        }
+        //loop through bullets
+        for(int i = 0; i < bulletList.size()-1; i++){
+            Bullet bullet = bulletList.get(i);
+            bullet.update(this);
+            if(!bullet.isAlive()){
+                bulletList.remove(bullet);
+                i--;
+            }
+        }
+        //loop through towers
+        for(Tower tower: towerList){
+            tower.update(this,tankList);
+        }
+    }
+
+    public void addMoney(int cash){
+        money += cash;
+    }
+
+    public void addToBulletList(Bullet bullet){
+        bulletList.add(bullet);
+    }
+
+    public void mouseReleased(){
+        if(money >= towerCost){
+            towerList.add(new Tower(30,2,50,mouseX,mouseY,150));
+            money-=towerCost;
+        }
     }
 
     public static void main(String[] args) {
