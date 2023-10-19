@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 public class Game extends PApplet {
     // TODO: declare game variables
-    private int money, tickCount, towerCost, wave,round;
+    private int money, tickCount, towerCost, wave, round, initialTowerRange;
     private ArrayList<Tank> tankList;
     private ArrayList<Bullet> bulletList;
     private ArrayList<Tower> towerList;
+    private boolean towerBuyMode;
 
 
     public void settings() {
@@ -24,6 +25,8 @@ public class Game extends PApplet {
         towerCost = 100;
         wave = 0;
         round = 0;
+        initialTowerRange = 250;
+        towerBuyMode = false;
     }
 
     /***
@@ -31,54 +34,102 @@ public class Game extends PApplet {
      * tick each object (have it update itself), and draw each object
      */
     public void draw() {
-        background(255);
+        background(0,100,0);
+        fill(0,255,0);
+        textSize(24);
+        text("Money: " + money, 50,50);
+        fill(0);
+        text("Placing Towers: " + towerBuyMode, 250,50);
+        text("Wave: " + wave, 600, 50);
         tickCount++;
-        if(tickCount >= 60){
+        if (tickCount >= 60) {
             tickCount = 0;
-            tankList.add(new Tank(100+wave*15,30,400,1,0, 40));
+            tankList.add(new Tank(100 + wave * 10, 30, 400, 1, 0, 40));
             round++;
         }
-        if(round >= 15){
+        if (round >= 15) {
             wave++;
+            addMoney(150);
+            round = 0;
         }
         //loop through tanks
-        for(int i = 0; i < tankList.size()-1; i++) {
+        for (int i = 0; i < tankList.size() - 1; i++) {
             Tank tank = tankList.get(i);
-            addMoney(tank.update(this));
-            if(!tank.isAlive()){
-                tankList.remove(tank);i--;
+            if (!tank.isAlive()) {
+                tankList.remove(tank);
+                i--;
             }
+            addMoney(tank.update(this));
         }
         //loop through bullets
-        for(int i = 0; i < bulletList.size()-1; i++){
+        for (int i = 0; i < bulletList.size() - 1; i++) {
             Bullet bullet = bulletList.get(i);
             bullet.update(this);
-            if(!bullet.isAlive()){
+            if (!bullet.isAlive()) {
                 bulletList.remove(bullet);
                 i--;
             }
         }
         //loop through towers
-        for(Tower tower: towerList){
-            tower.update(this,tankList);
+        for (Tower tower : towerList) {
+            tower.update(this, tankList);
         }
     }
 
-    public void addMoney(int cash){
+    public void addMoney(int cash) {
         money += cash;
     }
 
-    public void addToBulletList(Bullet bullet){
+    public void addToBulletList(Bullet bullet) {
         bulletList.add(bullet);
     }
 
-    public void mouseReleased(){
-        if(money >= towerCost){
-            towerList.add(new Tower(30,2,50,mouseX,mouseY,150));
-            money-=towerCost;
+    public void buyTower() {
+        if (money >= towerCost) {
+            towerList.add(new Tower(34, 1, 50, mouseX, mouseY, initialTowerRange));
+            money -= towerCost;
         }
     }
 
+    public boolean towerClicked(){
+        for (Tower tower : towerList) {
+            if (tower.contains(mouseX, mouseY)) {
+                if (money >= tower.getUpgradeCost()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public Tower clickedTower(){
+        for (Tower tower : towerList) {
+            if (tower.contains(mouseX, mouseY)) {
+                if (money >= tower.getUpgradeCost()) {
+                    return tower;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void mouseReleased() {
+        if(towerBuyMode){
+            if(!towerClicked()){
+                buyTower();
+            }
+        }else {
+            if(towerClicked()){
+                clickedTower().upgrade(this);
+            }
+        }
+    }
+
+    public void keyReleased(){
+        if(key=='z'){
+            towerBuyMode = !towerBuyMode;
+        }
+    }
     public static void main(String[] args) {
         PApplet.main("Game");
     }

@@ -21,19 +21,19 @@ public class Bullet {
             x += xSpeed;
             y += ySpeed;
             draw(game);
-            if (colliding()) {
+            if(colliding()){
                 hit();
             }
         }
     }
 
     public boolean colliding(){
-        return this.size + target.getSize() <= distance();
+        return  size + target.getSize() >= distance();
     }
     private double distance(){
-        float run = target.getX() - x;
-        float rise = target.getY() - y;
-        return Math.sqrt((rise*rise)+(run*run));
+        float run = Math.abs(x-target.getX());
+        float rise = Math.abs(y-target.getY());
+        return rise+run;
     }
 
     public void draw(PApplet game){

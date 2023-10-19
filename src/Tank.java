@@ -15,16 +15,17 @@ public class Tank {
     }
 
     public int update(PApplet PApplet){
-        if(alive) {
+        if(alive){
             x += xSpeed;
             y += ySpeed;
             draw(PApplet);
-            if (health <= 0) {
+            if (health <= 0){
                 alive = false;
                 return 20;
             } else return 0;
+        }else{
+            return 0;
         }
-        return 0;
     }
 
     public void getHit(int dmg){
