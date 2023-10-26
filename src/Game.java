@@ -1,5 +1,6 @@
 import processing.core.PApplet;
 
+import java.io.*;
 import java.util.ArrayList;
 
 public class Game extends PApplet {
@@ -86,7 +87,7 @@ public class Game extends PApplet {
 
     public void buyTower() {
         if (money >= towerCost) {
-            towerList.add(new Tower(34, 1, 50, mouseX, mouseY, initialTowerRange));
+            towerList.add(new Tower(34, 1, 50, mouseX, mouseY, initialTowerRange, 0));
             money -= towerCost;
         }
     }
@@ -125,9 +126,26 @@ public class Game extends PApplet {
         }
     }
 
-    public void keyReleased(){
-        if(key=='z'){
+    public void keyReleased() {
+        if (key == 'z') {
             towerBuyMode = !towerBuyMode;
+        }
+        if (key == 's') {
+            try {
+                PrintWriter tankSaver = new PrintWriter(new FileWriter("saveTanks.txt"));
+                PrintWriter towerSaver = new PrintWriter(new FileWriter("saveTowers.txt"));
+
+                for (Tank tank : tankList) {
+                    tankSaver.println(tank.getX() + "," + tank.getY() + "," + tank.getHealth() + "," + tank.getxSpeed() + "," + tank.getySpeed() + "," + tank.getSize());
+                }
+                for (Tower tower : towerList) {
+                    towerSaver.println(tower.getDamage() + "," + tower.getFireRate() + "," + tower.getUpgradeCost() + "," + tower.getX() + "," + tower.getY() + "," + tower.getRange() + "," + tower.getUpgradeCount());
+                }
+                tankSaver.close();
+                towerSaver.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
     public static void main(String[] args) {

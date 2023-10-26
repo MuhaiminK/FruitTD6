@@ -43,6 +43,15 @@ public class Tank {
     public int getY() {
         return y;
     }
+    public int getxSpeed() {
+        return xSpeed;
+    }
+    public int getySpeed() {
+        return ySpeed;
+    }
+    public int getHealth() {
+        return health;
+    }
     public boolean isAlive() {
         return alive;
     }

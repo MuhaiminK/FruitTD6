@@ -8,7 +8,7 @@ public class Tower {
     private int damage, upgradeCost, upgradeCount, x, y, tick, size;
     private double fireRate;
 
-    public Tower(int dmg, double fr, int upgradeCost, int x, int y, int range){
+    public Tower(int dmg, double fr, int upgradeCost, int x, int y, int range, int upgradeCount){
         damage = dmg;
         fireRate = fr;
         this.upgradeCost = upgradeCost;
@@ -84,5 +84,26 @@ public class Tower {
 
     public int getUpgradeCost() {
         return upgradeCost;
+    }
+    public double getRange() {
+        return range;
+    }
+    public int getDamage() {
+        return damage;
+    }
+    public int getUpgradeCount() {
+        return upgradeCount;
+    }
+    public int getX() {
+        return x;
+    }
+    public int getY() {
+        return y;
+    }
+    public int getSize() {
+        return size;
+    }
+    public double getFireRate() {
+        return fireRate;
     }
 }
