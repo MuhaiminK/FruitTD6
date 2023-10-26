@@ -1,5 +1,6 @@
 import processing.core.PApplet;
 
+import java.io.*;
 import java.util.ArrayList;
 
 public class Game extends PApplet {
@@ -73,6 +74,42 @@ public class Game extends PApplet {
         //loop through towers
         for (Tower tower : towerList) {
             tower.update(this, tankList);
+        }
+    }
+    public void keyReleased() {
+        if (key == 's') {
+            try {
+                PrintWriter out = new PrintWriter(new FileWriter("saveGame.txt"));
+                for (int i = 0; i < tankList.size(); i++) {
+                    Tank p = tankList.get(i);
+                    out.println(p.getX() + "," + p.getY());
+                }
+                for (int i = 0; i < towerList.size(); i++) {
+                    Tower p = towerList.get(i);
+                    out.println(p.getX() + "," + p.getY());
+                }
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        if (key == 'l') {
+            tankList.clear();
+            try {
+                BufferedReader in = new BufferedReader(new FileReader("saveGame.txt"));
+                tankList.clear();
+                String line;
+                while ((line = in.readLine()) != null) {
+                    String[] vals = line.split(",");
+                    float x = Float.parseFloat(vals[0]);
+                    float y = Float.parseFloat(vals[1]);
+                    Tank p = new Tank(x, y, );
+                    pointList.add(p);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

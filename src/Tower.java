@@ -85,4 +85,12 @@ public class Tower {
     public int getUpgradeCost() {
         return upgradeCost;
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }
