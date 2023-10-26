@@ -8,7 +8,7 @@ public class Tower {
     private int damage, upgradeCost, upgradeCount, x, y, tick, size;
     private double fireRate;
 
-    public Tower(int dmg, double fr, int upgradeCost, int x, int y, int range, int upgradeCount){
+    public Tower(int dmg, double fr, int upgradeCost, int x, int y, double range, int upgradeCount){
         damage = dmg;
         fireRate = fr;
         this.upgradeCost = upgradeCost;

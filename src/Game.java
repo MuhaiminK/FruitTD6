@@ -129,8 +129,7 @@ public class Game extends PApplet {
     public void keyReleased() {
         if (key == 'z') {
             towerBuyMode = !towerBuyMode;
-        }
-        if (key == 's') {
+        } else if (key == 's') {
             try {
                 PrintWriter tankSaver = new PrintWriter(new FileWriter("saveTanks.txt"));
                 PrintWriter towerSaver = new PrintWriter(new FileWriter("saveTowers.txt"));
@@ -146,8 +145,7 @@ public class Game extends PApplet {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        if (key == 'l') {
+        }else if (key == 'l') {
             try {
                 BufferedReader in = new BufferedReader(new FileReader("saveTanks.txt"));
                 tankList.clear();
@@ -166,25 +164,27 @@ public class Game extends PApplet {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        try {
-            BufferedReader in = new BufferedReader(new FileReader("saveTowers.txt"));
-            towerList.clear();
-            String line;
-            while ((line = in.readLine()) != null) {
-                String[] vals = line.split(",");
-                int dmg = Integer.parseInt(vals[0]);
-                double fr = Double.parseDouble(vals[1]);
-                int upgradeCost = Integer.parseInt(vals[2]);
-                int x = Integer.parseInt(vals[3]);
-                int y = Integer.parseInt(vals[4]);
-                int range = Integer.parseInt(vals[5]);
-                Tower p = new Tower(dmg, fr, upgradeCost, x, y, range, 0);
-                towerList.add(p);
+            try {
+                BufferedReader in = new BufferedReader(new FileReader("saveTowers.txt"));
+                towerList.clear();
+                String line;
+                while ((line = in.readLine()) != null) {
+                    String[] vals = line.split(",");
+                    int dmg = Integer.parseInt(vals[0]);
+                    double fr = Double.parseDouble(vals[1]);
+                    int upgradeCost = Integer.parseInt(vals[2]);
+                    int x = Integer.parseInt(vals[3]);
+                    int y = Integer.parseInt(vals[4]);
+                    double range = Double.parseDouble(vals[5]);
+                    int upgradeCount = Integer.parseInt(vals[6]);
+                    Tower p = new Tower(dmg, fr, upgradeCost, x, y, range, upgradeCount);
+                    towerList.add(p);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
     }
     public static void main(String[] args) {
         PApplet.main("Game");
