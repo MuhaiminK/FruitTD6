@@ -58,4 +58,11 @@ public class Tank {
     public int getSize() {
         return size;
     }
+    public void setxSpeed(int xSpeed) {
+        this.xSpeed = xSpeed;
+    }
+
+    public void setySpeed(int ySpeed) {
+        this.ySpeed = ySpeed;
+    }
 }
