@@ -147,6 +147,44 @@ public class Game extends PApplet {
                 e.printStackTrace();
             }
         }
+        if (key == 'l') {
+            try {
+                BufferedReader in = new BufferedReader(new FileReader("saveTanks.txt"));
+                tankList.clear();
+                String line;
+                while ((line = in.readLine()) != null) {
+                    String[] vals = line.split(",");
+                    int health = Integer.parseInt(vals[0]);
+                    int x = Integer.parseInt(vals[1]);
+                    int y = Integer.parseInt(vals[2]);
+                    int xSpeed = Integer.parseInt(vals[3]);
+                    int ySpeed = Integer.parseInt(vals[4]);
+                    int size = Integer.parseInt(vals[5]);
+                    Tank p = new Tank(health, x, y, xSpeed, ySpeed, size);
+                    tankList.add(p);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            BufferedReader in = new BufferedReader(new FileReader("saveTowers.txt"));
+            towerList.clear();
+            String line;
+            while ((line = in.readLine()) != null) {
+                String[] vals = line.split(",");
+                int dmg = Integer.parseInt(vals[0]);
+                double fr = Double.parseDouble(vals[1]);
+                int upgradeCost = Integer.parseInt(vals[2]);
+                int x = Integer.parseInt(vals[3]);
+                int y = Integer.parseInt(vals[4]);
+                int range = Integer.parseInt(vals[5]);
+                Tower p = new Tower(dmg, fr, upgradeCost, x, y, range, 0);
+                towerList.add(p);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     public static void main(String[] args) {
         PApplet.main("Game");
