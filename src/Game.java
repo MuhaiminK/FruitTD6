@@ -37,9 +37,10 @@ public class Game extends PApplet {
         background(0,100,0);
         fill(0,255,0);
         textSize(24);
-        text("Money: " + money, 50,50);
+        text("Money: $" + money, 50,50);
+        text("Tower cost: $100", 50,100);
         fill(0);
-        text("Placing Towers: " + towerBuyMode, 250,50);
+        text("Placing Towers: " + towerBuyMode, 290,50);
         text("Wave: " + wave, 600, 50);
         tickCount++;
         if (tickCount >= 60) {
@@ -74,6 +75,17 @@ public class Game extends PApplet {
         for (Tower tower : towerList) {
             tower.update(this, tankList);
         }
+        if(towerHovered() != null){
+            Tower tower = towerHovered();
+            int upgradeCost = tower.getUpgradeCost();
+            fill(255,255,0);
+            textSize(14);
+            if(upgradeCost == 250){
+                text("MAXED OUT", tower.getX()-30,tower.getY()-10);
+            }else{
+                text("Upgrade Cost: $" + upgradeCost, tower.getX()-50,tower.getY()-10);
+            }
+        }
     }
 
     public void addMoney(int cash) {
@@ -86,20 +98,29 @@ public class Game extends PApplet {
 
     public void buyTower() {
         if (money >= towerCost) {
-            towerList.add(new Tower(34, 1, 50, mouseX, mouseY, initialTowerRange, 0));
+            towerList.add(new Tower(34, 1, 50, mouseX-15, mouseY-15, initialTowerRange, 0));
             money -= towerCost;
         }
     }
 
     public boolean towerClicked(){
         for (Tower tower : towerList) {
-            if (tower.contains(mouseX, mouseY)) {
+            if (towerHovered() != null) {
                 if (money >= tower.getUpgradeCost()) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    public Tower towerHovered(){
+        for (Tower tower : towerList) {
+            if (tower.contains(mouseX, mouseY)) {
+                return tower;
+            }
+        }
+        return null;
     }
 
     public Tower clickedTower(){
@@ -128,14 +149,13 @@ public class Game extends PApplet {
     public void keyReleased() {
         if (key == 'z') {
             towerBuyMode = !towerBuyMode;
-        }
-        if (key == 's') {
+        }else if (key == 's') {
             try {
                 PrintWriter tankSaver = new PrintWriter(new FileWriter("saveTanks.txt"));
                 PrintWriter towerSaver = new PrintWriter(new FileWriter("saveTowers.txt"));
 
                 for (Tank tank : tankList) {
-                    tankSaver.println(tank.getX() + "," + tank.getY() + "," + tank.getHealth() + "," + tank.getxSpeed() + "," + tank.getySpeed() + "," + tank.getSize());
+                    tankSaver.println(tank.getHealth() + "," + tank.getX() + "," + tank.getY() + "," + tank.getxSpeed() + "," + tank.getySpeed() + "," + tank.getSize());
                 }
                 for (Tower tower : towerList) {
                     towerSaver.println(tower.getDamage() + "," + tower.getFireRate() + "," + tower.getUpgradeCost() + "," + tower.getX() + "," + tower.getY() + "," + tower.getRange() + "," + tower.getUpgradeCount());
@@ -145,8 +165,7 @@ public class Game extends PApplet {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        if (key == 'l') {
+        }else if (key == 'l') {
             try {
                 BufferedReader in = new BufferedReader(new FileReader("saveTanks.txt"));
                 tankList.clear();
@@ -165,24 +184,25 @@ public class Game extends PApplet {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        try {
-            BufferedReader in = new BufferedReader(new FileReader("saveTowers.txt"));
-            towerList.clear();
-            String line;
-            while ((line = in.readLine()) != null) {
-                String[] vals = line.split(",");
-                int dmg = Integer.parseInt(vals[0]);
-                double fr = Double.parseDouble(vals[1]);
-                int upgradeCost = Integer.parseInt(vals[2]);
-                int x = Integer.parseInt(vals[3]);
-                int y = Integer.parseInt(vals[4]);
-                int range = Integer.parseInt(vals[5]);
-                Tower p = new Tower(dmg, fr, upgradeCost, x, y, range, 0);
-                towerList.add(p);
+            try {
+                BufferedReader in = new BufferedReader(new FileReader("saveTowers.txt"));
+                towerList.clear();
+                String line;
+                while ((line = in.readLine()) != null) {
+                    String[] vals = line.split(",");
+                    int dmg = Integer.parseInt(vals[0]);
+                    double fr = Double.parseDouble(vals[1]);
+                    int upgradeCost = Integer.parseInt(vals[2]);
+                    int x = Integer.parseInt(vals[3]);
+                    int y = Integer.parseInt(vals[4]);
+                    double range = Double.parseDouble(vals[5]);
+                    int upgradeCount = Integer.parseInt(vals[6]);
+                    Tower p = new Tower(dmg, fr, upgradeCost, x, y, range, upgradeCount);
+                    towerList.add(p);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
     public static void main(String[] args) {
