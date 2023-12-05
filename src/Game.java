@@ -35,12 +35,38 @@ public class Game extends PApplet {
      * tick each object (have it update itself), and draw each object
      */
     public void draw() {
-        background(0,100,0);
-        fill(0,255,0);
+        background(0, 100, 0);
+        fill(153, 153, 153);
+        rect(0, 375, 200, 50);
+        fill(153, 153, 153);
+        rect(200, 225, 50, 200, 10, 10, 10, 0);
+        fill(153, 153, 153);
+        rect(200, 225, 200, 50, 10, 10, 0, 0);
+        fill(153, 153, 153);
+        rect(350, 225, 50, 350, 0, 10, 10, 10);
+        fill(153, 153, 153);
+        rect(150, 550, 250, 50, 10, 0, 10, 0);
+        fill(153, 153, 153);
+        rect(150, 600, 50, 150, 0, 0, 0, 10);
+        fill(153, 153, 153);
+        rect(200, 700, 450, 50, 0, 0, 0, 0);
+        fill(153, 153, 153);
+        rect(650, 500, 50, 250, 0, 10, 10, 0);
+        fill(153, 153, 153);
+        rect(500, 500, 200, 50, 0, 10, 0, 10);
+        fill(153, 153, 153);
+        rect(500, 300, 50, 200, 10, 0, 0, 0);
+        fill(153, 153, 153);
+        rect(550, 300, 150, 50, 0, 0, 0, 0);
+        fill(153, 153, 153);
+        rect(700, 100, 50, 250, 0, 10, 10, 0);
+        fill(153, 153, 153);
+        rect(0, 100, 700, 50, 0, 0, 0, 0);
         textSize(24);
-        text("Money: " + money, 50,50);
+        fill(0, 255, 0);
+        text("Money: " + money, 50, 50);
         fill(0);
-        text("Placing Towers: " + towerBuyMode, 250,50);
+        text("Placing Towers: " + towerBuyMode, 250, 50);
         text("Wave: " + wave, 600, 50);
         tickCount++;
         if (tickCount >= 60) {
@@ -92,7 +118,7 @@ public class Game extends PApplet {
         }
     }
 
-    public boolean towerClicked(){
+    public boolean towerClicked() {
         for (Tower tower : towerList) {
             if (tower.contains(mouseX, mouseY)) {
                 if (money >= tower.getUpgradeCost()) {
@@ -103,7 +129,7 @@ public class Game extends PApplet {
         return false;
     }
 
-    public Tower clickedTower(){
+    public Tower clickedTower() {
         for (Tower tower : towerList) {
             if (tower.contains(mouseX, mouseY)) {
                 if (money >= tower.getUpgradeCost()) {
@@ -115,12 +141,12 @@ public class Game extends PApplet {
     }
 
     public void mouseReleased() {
-        if(towerBuyMode){
-            if(!towerClicked()){
+        if (towerBuyMode) {
+            if (!towerClicked()) {
                 buyTower();
             }
-        }else {
-            if(towerClicked()){
+        } else {
+            if (towerClicked()) {
                 clickedTower().upgrade(this);
             }
         }
@@ -145,7 +171,7 @@ public class Game extends PApplet {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else if (key == 'l') {
+        } else if (key == 'l') {
             try {
                 BufferedReader in = new BufferedReader(new FileReader("saveTanks.txt"));
                 tankList.clear();
@@ -186,6 +212,7 @@ public class Game extends PApplet {
         }
 
     }
+
     public static void main(String[] args) {
         PApplet.main("Game");
     }
