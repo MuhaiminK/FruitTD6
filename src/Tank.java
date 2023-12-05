@@ -1,17 +1,19 @@
 import processing.core.PApplet;
 
 public class Tank {
-    private int health, x, y, xSpeed, ySpeed, size;
-    private boolean alive;
+    private int health, x, y, xSpeed, ySpeed, size, startingHp;
+    private boolean alive, boss;
 
-    public Tank(int hp, int x, int y, int xS, int yS, int size){
+    public Tank(int hp, int x, int y, int xS, int yS, int size, boolean boss){
         health = hp;
+        startingHp = hp;
         this.x = x;
         this.y = y;
         xSpeed = xS;
         ySpeed = yS;
         this.size = size;
         alive = true;
+        this.boss = boss;
     }
 
     public int update(PApplet PApplet){
@@ -33,7 +35,11 @@ public class Tank {
     }
 
     public void draw(PApplet game){
-        game.fill(150,0,0);
+        if(boss){
+            game.fill(150,0,200);
+        }else{
+            game.fill(150,0,0);
+        }
         game.ellipse(x,y,size,size);
     }
 
@@ -55,8 +61,14 @@ public class Tank {
     public boolean isAlive() {
         return alive;
     }
+    public boolean isBoss() {
+        return boss;
+    }
     public int getSize() {
         return size;
+    }
+    public int getStartingHp() {
+        return startingHp;
     }
     public void setxSpeed(int xSpeed) {
         this.xSpeed = xSpeed;

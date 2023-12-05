@@ -46,12 +46,15 @@ public class Game extends PApplet {
         tickCount++;
         if (tickCount >= 60) {
             tickCount = 0;
-            tankList.add(new Tank(tankSpawnHealth, 30, 400, 1, 0, 40));
+            tankList.add(new Tank(tankSpawnHealth, 30, 400, 1, 0, 40, false));
             round++;
         }
         if (round >= 10) {
             wave++;
-            tankSpawnHealth = 100 + wave * 10;
+            if(wave % 5 == 0){
+                tankList.add(new Tank(tankSpawnHealth*10, 30, 400, 1, 0, 40, true));
+            }
+            tankSpawnHealth = 100 + wave * 50;
             addMoney(150);
             round = 0;
         }
@@ -82,7 +85,7 @@ public class Game extends PApplet {
             int upgradeCost = tower.getUpgradeCost();
             fill(255,255,0);
             textSize(14);
-            if(upgradeCost == 250){
+            if(upgradeCost == 350){
                 text("MAXED OUT", tower.getX()-30,tower.getY()-10);
             }else{
                 text("Upgrade Cost: $" + upgradeCost, tower.getX()-50,tower.getY()-10);
@@ -93,7 +96,7 @@ public class Game extends PApplet {
             int health = tank.getHealth();
             fill(0);
             textSize(18);
-            text(health + "/" + tankSpawnHealth, tank.getX()-40,tank.getY()+50);
+            text(health + "/" + tank.getStartingHp(), tank.getX()-40,tank.getY()+50);
         }
     }
 
@@ -175,7 +178,7 @@ public class Game extends PApplet {
                 PrintWriter towerSaver = new PrintWriter(new FileWriter("saveTowers.txt"));
 
                 for (Tank tank : tankList) {
-                    tankSaver.println(tank.getHealth() + "," + tank.getX() + "," + tank.getY() + "," + tank.getxSpeed() + "," + tank.getySpeed() + "," + tank.getSize());
+                    tankSaver.println(tank.getHealth() + "," + tank.getX() + "," + tank.getY() + "," + tank.getxSpeed() + "," + tank.getySpeed() + "," + tank.getSize() + "," + tank.isBoss());
                 }
                 for (Tower tower : towerList) {
                     towerSaver.println(tower.getDamage() + "," + tower.getFireRate() + "," + tower.getUpgradeCost() + "," + tower.getX() + "," + tower.getY() + "," + tower.getRange() + "," + tower.getUpgradeCount());
@@ -186,6 +189,7 @@ public class Game extends PApplet {
                 e.printStackTrace();
             }
         }else if (key == 'l') {
+            //load tanks
             try {
                 BufferedReader in = new BufferedReader(new FileReader("saveTanks.txt"));
                 tankList.clear();
@@ -198,12 +202,14 @@ public class Game extends PApplet {
                     int xSpeed = Integer.parseInt(vals[3]);
                     int ySpeed = Integer.parseInt(vals[4]);
                     int size = Integer.parseInt(vals[5]);
-                    Tank p = new Tank(health, x, y, xSpeed, ySpeed, size);
+                    boolean boss = Boolean.parseBoolean(vals[6]);
+                    Tank p = new Tank(health, x, y, xSpeed, ySpeed, size, boss);
                     tankList.add(p);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            //load towers
             try {
                 BufferedReader in = new BufferedReader(new FileReader("saveTowers.txt"));
                 towerList.clear();
@@ -223,6 +229,7 @@ public class Game extends PApplet {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
     }
     public static void main(String[] args) {
