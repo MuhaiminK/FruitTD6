@@ -61,7 +61,9 @@ public class Tank {
     public void setxSpeed(int xSpeed) {
         this.xSpeed = xSpeed;
     }
-
+    public boolean contains(int x, int y){
+        return (Math.abs(this.x-x)+Math.abs(this.y-y)) <= size;
+    }
     public void setySpeed(int ySpeed) {
         this.ySpeed = ySpeed;
     }

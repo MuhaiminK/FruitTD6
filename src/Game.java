@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Game extends PApplet {
     // TODO: declare game variables
-    private int money, tickCount, towerCost, wave, round, initialTowerRange;
+    private int money, tickCount, towerCost, wave, round, initialTowerRange, tankSpawnHealth;
     private ArrayList<Tank> tankList;
     private ArrayList<Bullet> bulletList;
     private ArrayList<Tower> towerList;
@@ -27,6 +27,7 @@ public class Game extends PApplet {
         round = 0;
         initialTowerRange = 250;
         towerBuyMode = false;
+        tankSpawnHealth = 100;
     }
 
     /***
@@ -45,11 +46,12 @@ public class Game extends PApplet {
         tickCount++;
         if (tickCount >= 60) {
             tickCount = 0;
-            tankList.add(new Tank(100 + wave * 10, 30, 400, 1, 0, 40));
+            tankList.add(new Tank(tankSpawnHealth, 30, 400, 1, 0, 40));
             round++;
         }
-        if (round >= 15) {
+        if (round >= 10) {
             wave++;
+            tankSpawnHealth = 100 + wave * 10;
             addMoney(150);
             round = 0;
         }
@@ -85,6 +87,13 @@ public class Game extends PApplet {
             }else{
                 text("Upgrade Cost: $" + upgradeCost, tower.getX()-50,tower.getY()-10);
             }
+        }
+        if(tankHovered() != null){
+            Tank tank = tankHovered();
+            int health = tank.getHealth();
+            fill(0);
+            textSize(18);
+            text(health + "/" + tankSpawnHealth, tank.getX()-40,tank.getY()+50);
         }
     }
 
@@ -123,6 +132,15 @@ public class Game extends PApplet {
         return null;
     }
 
+    public Tank tankHovered(){
+        for(Tank tank : tankList){
+            if(tank.contains(mouseX, mouseY)){
+                return tank;
+            }
+        }
+        return null;
+    }
+
     public Tower clickedTower(){
         for (Tower tower : towerList) {
             if (tower.contains(mouseX, mouseY)) {
@@ -140,8 +158,10 @@ public class Game extends PApplet {
                 buyTower();
             }
         }else {
-            if(towerClicked()){
-                clickedTower().upgrade(this);
+            if(towerHovered() != null){
+                if(money > towerHovered().getUpgradeCost()){
+                    towerHovered().upgrade(this);
+                }
             }
         }
     }
