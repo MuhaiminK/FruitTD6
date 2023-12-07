@@ -37,7 +37,6 @@ public class Game extends PApplet {
      */
     public void draw() {
         if(health > 0) {
-
             background(0, 100, 0);
             fill(153, 153, 153);
             rect(0, 375, 200, 50);

@@ -1,8 +1,11 @@
 import processing.core.PApplet;
 
+import java.util.ArrayList;
+
 public class Tank {
-    private int health, x, y, xSpeed, ySpeed, size, startingHp;
+    private int health, x, y, xSpeed, ySpeed, size, startingHp, index;
     private boolean alive, boss;
+    private int[] waypoints = {225,400,225,250,375,250,375,575,175,575,175,725,675,725,675,525,525,525,525,325,725,325,725,125,900,125};
 
     public Tank(int hp, int x, int y, int xS, int yS, int size, boolean boss){
         health = hp;
@@ -14,47 +17,12 @@ public class Tank {
         this.size = size;
         alive = true;
         this.boss = boss;
+        index = 0;
     }
 
     public int update(PApplet PApplet){
         if(alive){
-            if (this.getX() == 225 && this.getY() == 400) {
-                this.setxSpeed(0);
-                this.setySpeed(-1);
-            }else if (this.getX() == 225 && this.getY() == 250) {
-                this.setxSpeed(1);
-                this.setySpeed(0);
-            }else if (this.getX() == 375 && this.getY() == 250) {
-                this.setxSpeed(0);
-                this.setySpeed(1);
-            }else if (this.getX() == 375 && this.getY() == 575) {
-                this.setxSpeed(-1);
-                this.setySpeed(0);
-            }else if (this.getX() == 175 && this.getY() == 575) {
-                this.setxSpeed(0);
-                this.setySpeed(1);
-            }else if (this.getX() == 175 && this.getY() == 725) {
-                this.setxSpeed(1);
-                this.setySpeed(0);
-            }else if (this.getX() == 675 && this.getY() == 725) {
-                this.setxSpeed(0);
-                this.setySpeed(-1);
-            }else if (this.getX() == 675 && this.getY() == 525) {
-                this.setxSpeed(-1);
-                this.setySpeed(0);
-            }else if (this.getX() == 525 && this.getY() == 525) {
-                this.setxSpeed(0);
-                this.setySpeed(-1);
-            }else if (this.getX() == 525 && this.getY() == 325) {
-                this.setxSpeed(1);
-                this.setySpeed(0);
-            }else if (this.getX() == 725 && this.getY() == 325) {
-                this.setxSpeed(0);
-                this.setySpeed(-1);
-            }else if (this.getX() == 725 && this.getY() == 125) {
-                this.setxSpeed(1);
-                this.setySpeed(0);
-            }
+            pathfind();
             x += xSpeed;
             y += ySpeed;
             draw(PApplet);
@@ -115,5 +83,23 @@ public class Tank {
     }
     public void setySpeed(int ySpeed) {
         this.ySpeed = ySpeed;
+    }
+    public void pathfind() {
+        if (this.getX() == waypoints[index] && this.getY() == waypoints[index + 1]) {
+            index += 2;
+        }
+        if (this.getX() == waypoints[index] && this.getY() < waypoints[index + 1]) {
+            this.setxSpeed(0);
+            this.setySpeed(1);
+        }else if (this.getX() == waypoints[index] && this.getY() > waypoints[index + 1]) {
+            this.setxSpeed(0);
+            this.setySpeed(-1);
+        }else if (this.getX() < waypoints[index] && this.getY() == waypoints[index + 1]) {
+            this.setxSpeed(1);
+            this.setySpeed(0);
+        }else if (this.getX() > waypoints[index] && this.getY() == waypoints[index + 1]) {
+            this.setxSpeed(-1);
+            this.setySpeed(0);
+        }
     }
 }
