@@ -56,7 +56,8 @@ public class Game extends PApplet {
             if (round >= 10) {
                 wave++;
                 if (wave % 5 == 0) {
-                    tankList.add(new Tank(tankSpawnHealth * 10, 30, 400, 1, 0, 40, true));
+                    //spawn boss
+                    tankList.add(new Tank((tankSpawnHealth * 5 ) + 500, 30, 400, 1, 0, 40, true));
                 }
                 tankSpawnHealth = 100 + wave * 50;
                 addMoney(150);
@@ -113,9 +114,9 @@ public class Game extends PApplet {
             }
             fill(255,0,0);
             textSize(50);
-            text("YOU DIED L", 300,400);
+            text("YOU DIED L", 250,400);
             textSize(20);
-            text("get better",400,600);
+            text("get better",300,450);
             if(round > 10){
                 setup();
             }
@@ -184,20 +185,25 @@ public class Game extends PApplet {
         if (key == 'z') {
             towerBuyMode = !towerBuyMode;
         }else if (key == 's') {
-            try {
-                PrintWriter tankSaver = new PrintWriter(new FileWriter("saveTanks.txt"));
-                PrintWriter towerSaver = new PrintWriter(new FileWriter("saveTowers.txt"));
+            if(health > 0){
+                try {
+                    PrintWriter tankSaver = new PrintWriter(new FileWriter("saveTanks.txt"));
+                    PrintWriter towerSaver = new PrintWriter(new FileWriter("saveTowers.txt"));
+                    PrintWriter statSaver = new PrintWriter(new FileWriter("saveStats.txt"));
 
-                for (Tank tank : tankList) {
-                    tankSaver.println(tank.getHealth() + "," + tank.getX() + "," + tank.getY() + "," + tank.getxSpeed() + "," + tank.getySpeed() + "," + tank.getSize() + "," + tank.isBoss());
+                    for (Tank tank : tankList) {
+                        tankSaver.println(tank.getHealth() + "," + tank.getX() + "," + tank.getY() + "," + tank.getxSpeed() + "," + tank.getySpeed() + "," + tank.getSize() + "," + tank.isBoss());
+                    }
+                    for (Tower tower : towerList) {
+                        towerSaver.println(tower.getDamage() + "," + tower.getFireRate() + "," + tower.getUpgradeCost() + "," + tower.getX() + "," + tower.getY() + "," + tower.getRange() + "," + tower.getUpgradeCount());
+                    }
+                    statSaver.println(money + "," + wave + "," + round + "," + health + "," + tickCount);
+                    tankSaver.close();
+                    towerSaver.close();
+                    statSaver.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                for (Tower tower : towerList) {
-                    towerSaver.println(tower.getDamage() + "," + tower.getFireRate() + "," + tower.getUpgradeCost() + "," + tower.getX() + "," + tower.getY() + "," + tower.getRange() + "," + tower.getUpgradeCount());
-                }
-                tankSaver.close();
-                towerSaver.close();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }else if (key == 'l') {
             //load tanks
@@ -240,7 +246,21 @@ public class Game extends PApplet {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
+            //load stats
+            try{
+                BufferedReader in = new BufferedReader(new FileReader("saveStats.txt"));
+                String line;
+                while((line = in.readLine()) != null){
+                    String[] vals = line.split(",");
+                    money = Integer.parseInt(vals[0]);
+                    wave = Integer.parseInt(vals[1]);
+                    round = Integer.parseInt(vals[2]);
+                    health = Integer.parseInt(vals[3]);
+                    tickCount = Integer.parseInt(vals[4]);
+                }
+            } catch (IOException e){
+                e.printStackTrace();
+            }
         }
     }
     public static void main(String[] args) {
