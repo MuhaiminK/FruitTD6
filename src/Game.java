@@ -39,6 +39,20 @@ public class Game extends PApplet {
         if(health > 0) {
 
             background(0, 100, 0);
+            fill(153, 153, 153);
+            rect(0, 375, 200, 50);
+            rect(200, 225, 50, 200, 10, 10, 10, 0);
+            rect(200, 225, 200, 50, 10, 10, 0, 0);
+            rect(350, 225, 50, 350, 0, 10, 10, 10);
+            rect(150, 550, 250, 50, 10, 0, 10, 0);
+            rect(150, 600, 50, 150, 0, 0, 0, 10);
+            rect(200, 700, 450, 50, 0, 0, 0, 0);
+            rect(650, 500, 50, 250, 0, 10, 10, 0);
+            rect(500, 500, 200, 50, 0, 10, 0, 10);
+            rect(500, 300, 50, 200, 10, 0, 0, 0);
+            rect(550, 300, 150, 50, 0, 0, 0, 0);
+            rect(700, 100, 50, 250, 10, 10, 10, 0);
+            rect(700, 100, 700, 50, 10, 0, 0, 0);
             fill(0, 255, 0);
             textSize(24);
             text("Money: $" + money, 50, 50);
@@ -95,7 +109,7 @@ public class Game extends PApplet {
                 int upgradeCost = tower.getUpgradeCost();
                 fill(255, 255, 0);
                 textSize(14);
-                if (upgradeCost == 350) {
+                if (upgradeCost == 450) {
                     text("MAXED OUT", tower.getX() - 30, tower.getY() - 10);
                 } else {
                     text("Upgrade Cost: $" + upgradeCost, tower.getX() - 50, tower.getY() - 10);
