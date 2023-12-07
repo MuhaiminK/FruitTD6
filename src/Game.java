@@ -95,7 +95,7 @@ public class Game extends PApplet {
                 int upgradeCost = tower.getUpgradeCost();
                 fill(255, 255, 0);
                 textSize(14);
-                if (upgradeCost == 350) {
+                if (upgradeCost >= 450) {
                     text("MAXED OUT", tower.getX() - 30, tower.getY() - 10);
                 } else {
                     text("Upgrade Cost: $" + upgradeCost, tower.getX() - 50, tower.getY() - 10);
