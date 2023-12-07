@@ -18,6 +18,43 @@ public class Tank {
 
     public int update(PApplet PApplet){
         if(alive){
+            if (this.getX() == 225 && this.getY() == 400) {
+                this.setxSpeed(0);
+                this.setySpeed(-1);
+            }else if (this.getX() == 225 && this.getY() == 250) {
+                this.setxSpeed(1);
+                this.setySpeed(0);
+            }else if (this.getX() == 375 && this.getY() == 250) {
+                this.setxSpeed(0);
+                this.setySpeed(1);
+            }else if (this.getX() == 375 && this.getY() == 575) {
+                this.setxSpeed(-1);
+                this.setySpeed(0);
+            }else if (this.getX() == 175 && this.getY() == 575) {
+                this.setxSpeed(0);
+                this.setySpeed(1);
+            }else if (this.getX() == 175 && this.getY() == 725) {
+                this.setxSpeed(1);
+                this.setySpeed(0);
+            }else if (this.getX() == 675 && this.getY() == 725) {
+                this.setxSpeed(0);
+                this.setySpeed(-1);
+            }else if (this.getX() == 675 && this.getY() == 525) {
+                this.setxSpeed(-1);
+                this.setySpeed(0);
+            }else if (this.getX() == 525 && this.getY() == 525) {
+                this.setxSpeed(0);
+                this.setySpeed(-1);
+            }else if (this.getX() == 525 && this.getY() == 325) {
+                this.setxSpeed(1);
+                this.setySpeed(0);
+            }else if (this.getX() == 725 && this.getY() == 325) {
+                this.setxSpeed(0);
+                this.setySpeed(-1);
+            }else if (this.getX() == 725 && this.getY() == 125) {
+                this.setxSpeed(1);
+                this.setySpeed(0);
+            }
             x += xSpeed;
             y += ySpeed;
             draw(PApplet);
