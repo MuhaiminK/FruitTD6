@@ -8,7 +8,7 @@ public class Game extends PApplet {
     private ArrayList<Tank> tankList;
     private ArrayList<Bullet> bulletList;
     private ArrayList<Tower> towerList;
-    private boolean towerBuyMode;
+    private boolean towerBuyMode, towerSellMode;
 
 
     public void settings() {
@@ -25,7 +25,7 @@ public class Game extends PApplet {
         towerCost = 100;
         wave = 0;
         round = 0;
-        initialTowerRange = 250;
+        initialTowerRange = 200;
         towerBuyMode = false;
         tankSpawnHealth = 100;
         health = 100;
@@ -55,12 +55,24 @@ public class Game extends PApplet {
             rect(700, 100, 700, 50, 10, 0, 0, 0);
             fill(0, 255, 0);
             textSize(24);
-            text("Money: $" + money, 50, 50);
-            text("Tower cost: $100", 50, 100);
+            text("Money: $" + money, 25, 50);
+            text("Tower cost: $100", 25, 100);
+            if(towerBuyMode){
+                fill(0,255,0);
+                text("Mode: Buying Towers", 240, 50);
+            }else if(towerSellMode){
+                fill(255,0,0);
+                text("Mode: Selling Towers", 240, 50);
+            }else{
+                fill(255,255,0);
+                text("Mode: Upgrading Towers", 240, 50);
+            }
             fill(0);
-            text("Placing Towers: " + towerBuyMode, 290, 50);
-            text("Wave: " + wave, 600, 50);
-            text("Health: " + health, 600, 100);
+            text("Wave: " + wave, 575, 50);
+            fill(0,75,255);
+            text("Health: " + health, 575, 100);
+
+
             tickCount++;
             if (tickCount >= 60) {
                 tickCount = 0;
@@ -109,10 +121,14 @@ public class Game extends PApplet {
                 int upgradeCost = tower.getUpgradeCost();
                 fill(255, 255, 0);
                 textSize(14);
-                if (upgradeCost == 450) {
-                    text("MAXED OUT", tower.getX() - 30, tower.getY() - 10);
-                } else {
-                    text("Upgrade Cost: $" + upgradeCost, tower.getX() - 50, tower.getY() - 10);
+                if(!towerBuyMode && !towerSellMode) {
+                    if (upgradeCost == 450) {
+                        text("MAX LEVEL", tower.getX() - 30, tower.getY() - 10);
+                    } else {
+                        text("Upgrade Cost: $" + upgradeCost, tower.getX() - 50, tower.getY() - 10);
+                    }
+                }else if(towerSellMode){
+                    text("Sell Price: $" + (upgradeCost-100)/2, tower.getX() - 30, tower.getY() - 10);
                 }
             }
             if (tankHovered() != null) {
@@ -152,12 +168,10 @@ public class Game extends PApplet {
         }
     }
 
-    public boolean towerClicked(){
-        for (Tower tower : towerList) {
-            if (towerHovered() != null) {
-                if (money >= tower.getUpgradeCost()) {
-                    return true;
-                }
+    public boolean canUpgradeTower(){
+        if(towerHovered() != null){
+            if(money >= towerHovered().getUpgradeCost()){
+                return true;
             }
         }
         return false;
@@ -183,8 +197,13 @@ public class Game extends PApplet {
 
     public void mouseReleased() {
         if(towerBuyMode){
-            if(!towerClicked()){
+            if(towerHovered() == null){
                 buyTower();
+            }
+        }else if(towerSellMode){
+            if(canUpgradeTower()){
+                money += (towerHovered().getUpgradeCost()-100)/2;
+                towerList.remove(towerHovered());
             }
         }else {
             if(towerHovered() != null){
@@ -198,6 +217,10 @@ public class Game extends PApplet {
     public void keyReleased() {
         if (key == 'z') {
             towerBuyMode = !towerBuyMode;
+            towerSellMode = false;
+        }else if(key == 'x') {
+            towerSellMode = !towerSellMode;
+            towerBuyMode = false;
         }else if (key == 's') {
             if(health > 0){
                 try {

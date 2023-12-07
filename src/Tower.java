@@ -75,9 +75,9 @@ public class Tower {
             game.addMoney(-upgradeCost);
             upgradeCost += 100;
             damage += 5;
-            if(range <= 400) {
+            if(range <= 300) {
                 range += 75;
-            }else range = 500;
+            }else range = 300;
             fireRate += 0.5;
         }
 
