@@ -9,6 +9,8 @@ public class Game extends PApplet {
     private ArrayList<Bullet> bulletList;
     private ArrayList<Tower> towerList;
     private boolean towerBuyMode;
+    private int towers = 0;
+
 
 
     public void settings() {
@@ -23,7 +25,7 @@ public class Game extends PApplet {
         towerList = new ArrayList<Tower>();
         tickCount = 0;
         towerCost = 100;
-        wave = 0;
+        wave = 1;
         round = 0;
         initialTowerRange = 250;
         towerBuyMode = false;
@@ -145,9 +147,10 @@ public class Game extends PApplet {
     }
 
     public void buyTower() {
-        if (money >= towerCost) {
+        if (money >= towerCost && towers < wave+2) {
             towerList.add(new Tower(34, 1, 50, mouseX-15, mouseY-15, initialTowerRange, 0, this));
             money -= towerCost;
+            towers++;
         }
     }
 
