@@ -1,7 +1,4 @@
 import processing.core.PApplet;
-import processing.core.PImage;
-
-import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -12,7 +9,6 @@ public class Game extends PApplet {
     private ArrayList<Bullet> bulletList;
     private ArrayList<Tower> towerList;
     private boolean towerBuyMode;
-    private PImage doctor, apple, pill;
 
 
     public void settings() {
@@ -67,14 +63,14 @@ public class Game extends PApplet {
             tickCount++;
             if (tickCount >= 60) {
                 tickCount = 0;
-                tankList.add(new Tank(tankSpawnHealth, 30, 400, 1, 0, 40, false ,this));
+                tankList.add(new Tank(tankSpawnHealth, 30, 400, 1, 0, 40, false));
                 round++;
             }
             if (round >= 10) {
                 wave++;
                 if (wave % 5 == 0) {
                     //spawn boss
-                    tankList.add(new Tank((tankSpawnHealth * 5 ) + 500, 30, 400, 1, 0, 40, true, this));
+                    tankList.add(new Tank((tankSpawnHealth * 5 ) + 500, 30, 400, 1, 0, 40, true));
                 }
                 tankSpawnHealth = 100 + wave * 50;
                 addMoney(150);
@@ -105,7 +101,6 @@ public class Game extends PApplet {
             }
             //loop through towers
             for (Tower tower : towerList) {
-                doctor = loadImage("Assets/doctor.png");
                 tower.update(this, tankList);
             }
             if (towerHovered() != null) {
@@ -151,7 +146,7 @@ public class Game extends PApplet {
 
     public void buyTower() {
         if (money >= towerCost) {
-            towerList.add(new Tower(34, 1, 50, mouseX-15, mouseY-15, initialTowerRange, 0, this));
+            towerList.add(new Tower(34, 1, 50, mouseX-15, mouseY-15, initialTowerRange, 0));
             money -= towerCost;
         }
     }
@@ -238,7 +233,7 @@ public class Game extends PApplet {
                     int ySpeed = Integer.parseInt(vals[4]);
                     int size = Integer.parseInt(vals[5]);
                     boolean boss = Boolean.parseBoolean(vals[6]);
-                    Tank p = new Tank(health, x, y, xSpeed, ySpeed, size, boss, this);
+                    Tank p = new Tank(health, x, y, xSpeed, ySpeed, size, boss);
                     tankList.add(p);
                 }
             } catch (IOException e) {
@@ -258,7 +253,7 @@ public class Game extends PApplet {
                     int y = Integer.parseInt(vals[4]);
                     double range = Double.parseDouble(vals[5]);
                     int upgradeCount = Integer.parseInt(vals[6]);
-                    Tower p = new Tower(dmg, fr, upgradeCost, x, y, range, upgradeCount, this);
+                    Tower p = new Tower(dmg, fr, upgradeCost, x, y, range, upgradeCount);
                     towerList.add(p);
                 }
             } catch (IOException e) {
