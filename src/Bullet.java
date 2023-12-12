@@ -1,40 +1,43 @@
 import processing.core.PApplet;
 import processing.core.PImage;
 
-public class Bullet {
-    protected int damage, x, y, xSpeed, ySpeed, size;
-    protected Tank target;
-    protected boolean alive;
+import java.util.ArrayList;
+
+public class Bullet{
+    int damage, x, y, xSpeed, ySpeed, size, age;
+    boolean alive;
     private PImage pill;
 
-    public Bullet(Tank tank, int dmg, int x, int y, int xSpeed, int ySpeed, int size, PApplet game){
+    public Bullet(int dmg, int x, int y, int xSpeed, int ySpeed, int size, PApplet game){
         damage = dmg;
         this.x = x;
         this.y = y;
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
         this.size = size;
-        target = tank;
         alive = true;
         pill = game.loadImage("Assets/pill.png");
+        age = 0;
     }
 
-    public void update(PApplet game){
+    public void update(PApplet game, ArrayList<Tank> tankList){
         if(alive) {
+            age++;
             x += xSpeed;
             y += ySpeed;
             draw(game);
-            if(colliding()){
-                hit();
-
+            for(Tank tank : tankList){
+                if(colliding(tank)){
+                    hit(tank);
+                }
             }
         }
     }
 
-    public boolean colliding(){
-        return  size + target.getSize() >= distance();
+    public boolean colliding(Tank target){
+        return  size + target.getSize()-2 >= distance(target);
     }
-    private double distance(){
+    private double distance(Tank target){
         float run = Math.abs(x-target.getX());
         float rise = Math.abs(y-target.getY());
         return rise+run;
@@ -42,11 +45,12 @@ public class Bullet {
 
     public void draw(PApplet game){
         game.fill(180,180,0);
+        //game.ellipse(x,y,size,size);
         game.image(this.pill, x-size/2, y-size/2,size*2,size*2);
     }
 
 
-    public void hit(){
+    public void hit(Tank target){
         target.getHit(damage);
         alive = false;
     }

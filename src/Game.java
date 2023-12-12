@@ -111,7 +111,11 @@ public class Game extends PApplet {
             //loop through bullets
             for (int i = 0; i < bulletList.size() - 1; i++) {
                 Bullet bullet = bulletList.get(i);
-                bullet.update(this);
+                if(bullet.getX() > 800 || bullet.getX() < 0 || bullet.getY() > 800 || bullet.getY() < 0){
+                    bulletList.remove(bullet);
+                    i--;
+                }
+                bullet.update(this, tankList);
                 if (!bullet.isAlive()) {
                     bulletList.remove(bullet);
                     i--;

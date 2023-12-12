@@ -19,7 +19,6 @@ public class Tower{
         size = 50;
         this.upgradeCount = upgradeCount;
         doctor = game.loadImage("Assets/doctor.png");
-
     }
 
     public void update(Game game, ArrayList<Tank> tanks){
@@ -41,7 +40,7 @@ public class Tower{
     public void shoot(ArrayList<Tank> tanks, Game game){
         Tank currTarget = findTarget(tanks);
         if(currTarget != null){
-            Bullet bullet = new Bullet(currTarget, damage, x+(size/2), y+(size/2), (currTarget.getX()-x)/10, (currTarget.getY()-y)/10, 10, game);
+            Bullet bullet = new Bullet(damage, x+(size/2), y+(size/2), (currTarget.getX()-x)/10, (currTarget.getY()-y)/10, 10, game);
             game.addToBulletList(bullet);
         }
     }
