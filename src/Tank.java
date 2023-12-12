@@ -3,7 +3,7 @@ import processing.core.PImage;
 
 import java.util.ArrayList;
 
-public class Tank {
+public class Tank extends  PApplet{
     private int health, x, y, xSpeed, ySpeed, size, startingHp, index;
     private boolean alive, boss;
     private PImage apple;
@@ -20,8 +20,11 @@ public class Tank {
         alive = true;
         this.boss = boss;
         this.index = index;
-        apple = game.loadImage("Assets/apple.png");
-
+        if(boss){
+            apple = game.loadImage("Assets/greenApple.png");
+        }else {
+            apple = game.loadImage("Assets/apple.png");
+        }
     }
 
     public int update(PApplet PApplet){
@@ -50,7 +53,7 @@ public class Tank {
             game.fill(150,0,0);
         }
         game.image(this.apple, x-size/2, y-size/2, size, size);
-//        game.ellipse(x,y,size,size);
+        //game.ellipse(x,y,size,size);
     }
 
     public int getX() {

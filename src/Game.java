@@ -1,3 +1,5 @@
+import ddf.minim.AudioPlayer;
+import ddf.minim.Minim;
 import processing.core.PApplet;
 import java.io.*;
 import java.util.ArrayList;
@@ -8,10 +10,9 @@ public class Game extends PApplet {
     private ArrayList<Tank> tankList;
     private ArrayList<Bullet> bulletList;
     private ArrayList<Tower> towerList;
-    private boolean towerBuyMode;
-    private int towers = 0;
-
-
+    private boolean towerBuyMode, towerSellMode;
+    Minim loader;
+    AudioPlayer moneySound;
 
     public void settings() {
         size(800, 800);
@@ -25,12 +26,14 @@ public class Game extends PApplet {
         towerList = new ArrayList<Tower>();
         tickCount = 0;
         towerCost = 100;
-        wave = 1;
+        wave = 0;
         round = 0;
-        initialTowerRange = 250;
+        initialTowerRange = 200;
         towerBuyMode = false;
         tankSpawnHealth = 100;
         health = 100;
+        loader = new Minim(this);
+        moneySound = loader.loadFile("Assets/money.wav");
     }
 
     /***
@@ -56,12 +59,24 @@ public class Game extends PApplet {
             rect(700, 100, 700, 50, 10, 0, 0, 0);
             fill(0, 255, 0);
             textSize(24);
-            text("Money: $" + money, 50, 50);
-            text("Tower cost: $100", 50, 100);
+            text("Money: $" + money, 25, 50);
+            text("Tower cost: $100", 25, 100);
+            if(towerBuyMode){
+                fill(0,255,0);
+                text("Mode: Buying Towers", 240, 50);
+            }else if(towerSellMode){
+                fill(255,0,0);
+                text("Mode: Selling Towers", 240, 50);
+            }else{
+                fill(255,255,0);
+                text("Mode: Upgrading Towers", 240, 50);
+            }
             fill(0);
-            text("Placing Towers: " + towerBuyMode, 290, 50);
-            text("Wave: " + wave, 600, 50);
-            text("Health: " + health, 600, 100);
+            text("Wave: " + wave, 575, 50);
+            fill(0,75,255);
+            text("Health: " + health, 575, 100);
+
+
             tickCount++;
             if (tickCount >= 60) {
                 tickCount = 0;
@@ -110,10 +125,14 @@ public class Game extends PApplet {
                 int upgradeCost = tower.getUpgradeCost();
                 fill(255, 255, 0);
                 textSize(14);
-                if (upgradeCost == 450) {
-                    text("MAXED OUT", tower.getX() - 30, tower.getY() - 10);
-                } else {
-                    text("Upgrade Cost: $" + upgradeCost, tower.getX() - 50, tower.getY() - 10);
+                if(!towerBuyMode && !towerSellMode) {
+                    if (upgradeCost == 450) {
+                        text("MAX LEVEL", tower.getX() - 30, tower.getY() - 10);
+                    } else {
+                        text("Upgrade Cost: $" + upgradeCost, tower.getX() - 50, tower.getY() - 10);
+                    }
+                }else if(towerSellMode){
+                    text("Sell Price: $" + (upgradeCost-100)/2, tower.getX() - 30, tower.getY() - 10);
                 }
             }
             if (tankHovered() != null) {
@@ -132,13 +151,16 @@ public class Game extends PApplet {
             text("YOU DIED L", 250,400);
             textSize(20);
             text("get better",300,450);
-            if(round > 10){
-                setup();
-            }
+            fill(0);
+            text("press 'R' to restart or 'L' to load last save", 200, 680);
         }
     }
 
     public void addMoney(int cash) {
+        if(cash > 0){
+            moneySound.play();
+            moneySound.rewind();
+        }
         money += cash;
     }
 
@@ -147,19 +169,16 @@ public class Game extends PApplet {
     }
 
     public void buyTower() {
-        if (money >= towerCost && towers < wave+2) {
-            towerList.add(new Tower(34, 1, 50, mouseX-15, mouseY-15, initialTowerRange, 0, this));
+        if (money >= towerCost) {
+            towerList.add(new Tower(34, 1, 50, mouseX-25, mouseY-25, initialTowerRange, 0, this));
             money -= towerCost;
-            towers++;
         }
     }
 
-    public boolean towerClicked(){
-        for (Tower tower : towerList) {
-            if (towerHovered() != null) {
-                if (money >= tower.getUpgradeCost()) {
-                    return true;
-                }
+    public boolean canUpgradeTower(){
+        if(towerHovered() != null){
+            if(money >= towerHovered().getUpgradeCost()){
+                return true;
             }
         }
         return false;
@@ -185,8 +204,13 @@ public class Game extends PApplet {
 
     public void mouseReleased() {
         if(towerBuyMode){
-            if(!towerClicked()){
+            if(towerHovered() == null){
                 buyTower();
+            }
+        }else if(towerSellMode){
+            if(canUpgradeTower()){
+                money += (towerHovered().getUpgradeCost()-100)/2;
+                towerList.remove(towerHovered());
             }
         }else {
             if(towerHovered() != null){
@@ -200,7 +224,13 @@ public class Game extends PApplet {
     public void keyReleased() {
         if (key == 'z') {
             towerBuyMode = !towerBuyMode;
-        }else if (key == 's') {
+            towerSellMode = false;
+        }else if(key == 'x') {
+            towerSellMode = !towerSellMode;
+            towerBuyMode = false;
+        }else if(key == 'r') {
+            setup();
+        } else if (key == 's') {
             if(health > 0){
                 try {
                     PrintWriter tankSaver = new PrintWriter(new FileWriter("saveTanks.txt"));
@@ -208,7 +238,7 @@ public class Game extends PApplet {
                     PrintWriter statSaver = new PrintWriter(new FileWriter("saveStats.txt"));
 
                     for (Tank tank : tankList) {
-                        tankSaver.println(tank.getHealth() + "," + tank.getX() + "," + tank.getY() + "," + tank.getxSpeed() + "," + tank.getySpeed() + "," + tank.getSize() + "," + tank.isBoss() + ","  + tank.getIndex());
+                        tankSaver.println(tank.getHealth() + "," + tank.getX() + "," + tank.getY() + "," + tank.getxSpeed() + "," + tank.getySpeed() + "," + tank.getSize() + "," + tank.isBoss() + "," + tank.getIndex());
                     }
                     for (Tower tower : towerList) {
                         towerSaver.println(tower.getDamage() + "," + tower.getFireRate() + "," + tower.getUpgradeCost() + "," + tower.getX() + "," + tower.getY() + "," + tower.getRange() + "," + tower.getUpgradeCount());

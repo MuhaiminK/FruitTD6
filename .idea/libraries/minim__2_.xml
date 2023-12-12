@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="minim (2)">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/Minim Sound Libraries/minim.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

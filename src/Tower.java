@@ -17,8 +17,8 @@ public class Tower{
         this.x = x;
         this.y = y;
         this.range = range;
-        size = 30;
-        upgradeCount = 0;
+        size = 50;
+        this.upgradeCount = upgradeCount;
         doctor = game.loadImage("Assets/doctor.png");
 
     }
@@ -35,7 +35,8 @@ public class Tower{
 
     public void draw(Game game){
         game.fill(40,40,40);
-        game.image(this.doctor, x , y, size, size);
+        game.rect(x,y,size,size);
+        game.image(this.doctor, x, y,size,size);
     }
 
     public void shoot(ArrayList<Tank> tanks, Game game){
