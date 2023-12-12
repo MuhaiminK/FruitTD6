@@ -20,8 +20,11 @@ public class Tank extends  PApplet{
         alive = true;
         this.boss = boss;
         this.index = index;
-        apple = game.loadImage("Assets/apple.png");
-
+        if(boss){
+            apple = game.loadImage("Assets/greenApple.png");
+        }else {
+            apple = game.loadImage("Assets/apple.png");
+        }
     }
 
     public int update(PApplet PApplet){
@@ -49,8 +52,8 @@ public class Tank extends  PApplet{
         }else{
             game.fill(150,0,0);
         }
-        game.image(this.apple, x, y);
-        game.ellipse(x,y,size,size);
+        game.image(this.apple, x-size/2, y-size/2, size, size);
+        //game.ellipse(x,y,size,size);
     }
 
     public int getX() {

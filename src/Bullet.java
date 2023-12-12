@@ -1,8 +1,8 @@
 import processing.core.PApplet;
 import processing.core.PImage;
 
-public class Bullet extends PApplet{
-    protected int damage, x, y, xSpeed, ySpeed, size;
+public class Bullet{
+    protected int damage, x, y, xSpeed, ySpeed, size, age;
     protected Tank target;
     protected boolean alive;
     private PImage pill;
@@ -16,13 +16,16 @@ public class Bullet extends PApplet{
         this.size = size;
         target = tank;
         alive = true;
-        pill = loadImage("Assets/pill.png");
+        pill = game.loadImage("Assets/pill.png");
+        age = 0;
     }
 
     public void update(PApplet game){
         if(alive) {
+            age++;
             x += xSpeed;
             y += ySpeed;
+            draw(game);
             if(colliding()){
                 hit();
             }
@@ -30,7 +33,7 @@ public class Bullet extends PApplet{
     }
 
     public boolean colliding(){
-        return  size + target.getSize() >= distance();
+        return  size + target.getSize()+5 >= distance();
     }
     private double distance(){
         float run = Math.abs(x-target.getX());
@@ -40,8 +43,8 @@ public class Bullet extends PApplet{
 
     public void draw(PApplet game){
         game.fill(180,180,0);
-        game.ellipse(x,y,size,size);
-        game.image(this.pill, x, y);
+        //game.ellipse(x,y,size,size);
+        game.image(this.pill, x-size/2, y-size/2,size*2,size*2);
     }
 
 

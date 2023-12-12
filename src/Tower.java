@@ -4,7 +4,7 @@ import processing.core.PImage;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
-public class Tower extends PApplet{
+public class Tower{
     protected double range;
     protected int damage, upgradeCost, upgradeCount, x, y, tick, size;
     protected double fireRate;
@@ -17,9 +17,9 @@ public class Tower extends PApplet{
         this.x = x;
         this.y = y;
         this.range = range;
-        size = 30;
-        upgradeCount = 0;
-        doctor = loadImage("Assets/doctor.png");
+        size = 50;
+        this.upgradeCount = upgradeCount;
+        doctor = game.loadImage("Assets/doctor.png");
 
     }
 
@@ -36,13 +36,13 @@ public class Tower extends PApplet{
     public void draw(Game game){
         game.fill(40,40,40);
         game.rect(x,y,size,size);
-        game.image(this.doctor, x, y);
+        game.image(this.doctor, x, y,size,size);
     }
 
     public void shoot(ArrayList<Tank> tanks, Game game){
         Tank currTarget = findTarget(tanks);
         if(currTarget != null){
-            Bullet bullet = new Bullet(currTarget, damage, x+(size/2), y+(size/2), (currTarget.getX()-x)/10, (currTarget.getY()-y)/10, 10, this);
+            Bullet bullet = new Bullet(currTarget, damage, x+(size/2), y+(size/2), (currTarget.getX()-x)/10, (currTarget.getY()-y)/10, 10, game);
             game.addToBulletList(bullet);
         }
     }

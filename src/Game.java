@@ -152,7 +152,7 @@ public class Game extends PApplet {
             textSize(20);
             text("get better",300,450);
             fill(0);
-            text("press 'R' to restart or 'L' to load last save", 150, 700);
+            text("press 'R' to restart or 'L' to load last save", 200, 680);
         }
     }
 
@@ -170,7 +170,7 @@ public class Game extends PApplet {
 
     public void buyTower() {
         if (money >= towerCost) {
-            towerList.add(new Tower(34, 1, 50, mouseX-15, mouseY-15, initialTowerRange, 0, this));
+            towerList.add(new Tower(34, 1, 50, mouseX-25, mouseY-25, initialTowerRange, 0, this));
             money -= towerCost;
         }
     }
@@ -228,7 +228,9 @@ public class Game extends PApplet {
         }else if(key == 'x') {
             towerSellMode = !towerSellMode;
             towerBuyMode = false;
-        }else if (key == 's') {
+        }else if(key == 'r') {
+            setup();
+        } else if (key == 's') {
             if(health > 0){
                 try {
                     PrintWriter tankSaver = new PrintWriter(new FileWriter("saveTanks.txt"));
