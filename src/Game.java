@@ -1,3 +1,5 @@
+import ddf.minim.AudioPlayer;
+import ddf.minim.Minim;
 import processing.core.PApplet;
 import java.io.*;
 import java.util.ArrayList;
@@ -9,6 +11,8 @@ public class Game extends PApplet {
     private ArrayList<Bullet> bulletList;
     private ArrayList<Tower> towerList;
     private boolean towerBuyMode, towerSellMode;
+    Minim loader;
+    AudioPlayer moneySound;
 
 
     public void settings() {
@@ -29,6 +33,8 @@ public class Game extends PApplet {
         towerBuyMode = false;
         tankSpawnHealth = 100;
         health = 100;
+        loader = new Minim(this);
+        moneySound = loader.loadFile("Assets/money.wav");
     }
 
     /***
@@ -152,6 +158,10 @@ public class Game extends PApplet {
     }
 
     public void addMoney(int cash) {
+        if(cash > 0){
+            moneySound.play();
+            moneySound.rewind();
+        }
         money += cash;
     }
 
