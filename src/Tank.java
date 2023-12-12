@@ -9,7 +9,7 @@ public class Tank extends  PApplet{
     private PImage apple;
     private int[] waypoints = {225,400,225,250,375,250,375,575,175,575,175,725,675,725,675,525,525,525,525,325,725,325,725,125,900,125};
 
-    public Tank(int hp, int x, int y, int xS, int yS, int size, boolean boss, PApplet game){
+    public Tank(int hp, int x, int y, int xS, int yS, int size, boolean boss, int index, PApplet game){
         health = hp;
         startingHp = hp;
         this.x = x;
@@ -19,7 +19,7 @@ public class Tank extends  PApplet{
         this.size = size;
         alive = true;
         this.boss = boss;
-        index = 0;
+        this.index = index;
         apple = game.loadImage("Assets/apple.png");
 
     }
@@ -106,5 +106,9 @@ public class Tank extends  PApplet{
             this.setxSpeed(-1);
             this.setySpeed(0);
         }
+    }
+
+    public int getIndex() {
+        return index;
     }
 }

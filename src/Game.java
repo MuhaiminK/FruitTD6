@@ -63,14 +63,14 @@ public class Game extends PApplet {
             tickCount++;
             if (tickCount >= 60) {
                 tickCount = 0;
-                tankList.add(new Tank(tankSpawnHealth, 30, 400, 1, 0, 40, false));
+                tankList.add(new Tank(tankSpawnHealth, 30, 400, 1, 0, 40, false, 0, this));
                 round++;
             }
             if (round >= 10) {
                 wave++;
                 if (wave % 5 == 0) {
                     //spawn boss
-                    tankList.add(new Tank((tankSpawnHealth * 5 ) + 500, 30, 400, 1, 0, 40, true));
+                    tankList.add(new Tank((tankSpawnHealth * 5 ) + 500, 30, 400, 1, 0, 40, true, 0, this));
                 }
                 tankSpawnHealth = 100 + wave * 50;
                 addMoney(150);
@@ -146,7 +146,7 @@ public class Game extends PApplet {
 
     public void buyTower() {
         if (money >= towerCost) {
-            towerList.add(new Tower(34, 1, 50, mouseX-15, mouseY-15, initialTowerRange, 0));
+            towerList.add(new Tower(34, 1, 50, mouseX-15, mouseY-15, initialTowerRange, 0, this));
             money -= towerCost;
         }
     }
@@ -205,7 +205,7 @@ public class Game extends PApplet {
                     PrintWriter statSaver = new PrintWriter(new FileWriter("saveStats.txt"));
 
                     for (Tank tank : tankList) {
-                        tankSaver.println(tank.getHealth() + "," + tank.getX() + "," + tank.getY() + "," + tank.getxSpeed() + "," + tank.getySpeed() + "," + tank.getSize() + "," + tank.isBoss());
+                        tankSaver.println(tank.getHealth() + "," + tank.getX() + "," + tank.getY() + "," + tank.getxSpeed() + "," + tank.getySpeed() + "," + tank.getSize() + "," + tank.isBoss() + ","  + tank.getIndex());
                     }
                     for (Tower tower : towerList) {
                         towerSaver.println(tower.getDamage() + "," + tower.getFireRate() + "," + tower.getUpgradeCost() + "," + tower.getX() + "," + tower.getY() + "," + tower.getRange() + "," + tower.getUpgradeCount());
@@ -233,7 +233,8 @@ public class Game extends PApplet {
                     int ySpeed = Integer.parseInt(vals[4]);
                     int size = Integer.parseInt(vals[5]);
                     boolean boss = Boolean.parseBoolean(vals[6]);
-                    Tank p = new Tank(health, x, y, xSpeed, ySpeed, size, boss);
+                    int index = Integer.parseInt(vals[7]);
+                    Tank p = new Tank(health, x, y, xSpeed, ySpeed, size, boss, index, this);
                     tankList.add(p);
                 }
             } catch (IOException e) {
@@ -253,7 +254,7 @@ public class Game extends PApplet {
                     int y = Integer.parseInt(vals[4]);
                     double range = Double.parseDouble(vals[5]);
                     int upgradeCount = Integer.parseInt(vals[6]);
-                    Tower p = new Tower(dmg, fr, upgradeCost, x, y, range, upgradeCount);
+                    Tower p = new Tower(dmg, fr, upgradeCost, x, y, range, upgradeCount, this);
                     towerList.add(p);
                 }
             } catch (IOException e) {
