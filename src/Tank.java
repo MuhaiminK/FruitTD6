@@ -1,13 +1,15 @@
 import processing.core.PApplet;
+import processing.core.PImage;
 
 import java.util.ArrayList;
 
-public class Tank {
+public class Tank extends  PApplet{
     private int health, x, y, xSpeed, ySpeed, size, startingHp, index;
     private boolean alive, boss;
+    private PImage apple;
     private int[] waypoints = {225,400,225,250,375,250,375,575,175,575,175,725,675,725,675,525,525,525,525,325,725,325,725,125,900,125};
 
-    public Tank(int hp, int x, int y, int xS, int yS, int size, boolean boss, int index){
+    public Tank(int hp, int x, int y, int xS, int yS, int size, boolean boss, int index, PApplet game){
         health = hp;
         startingHp = hp;
         this.x = x;
@@ -18,6 +20,8 @@ public class Tank {
         alive = true;
         this.boss = boss;
         this.index = index;
+        apple = game.loadImage("Assets/apple.png");
+
     }
 
     public int update(PApplet PApplet){
@@ -45,33 +49,12 @@ public class Tank {
         }else{
             game.fill(150,0,0);
         }
+        game.image(this.apple, x, y);
         game.ellipse(x,y,size,size);
-    }
-
-    public void pathfind() {
-        if (this.getX() == waypoints[index] && this.getY() == waypoints[index + 1]) {
-            index += 2;
-        }
-        if (this.getX() == waypoints[index] && this.getY() < waypoints[index + 1]) {
-            this.setxSpeed(0);
-            this.setySpeed(1);
-        }else if (this.getX() == waypoints[index] && this.getY() > waypoints[index + 1]) {
-            this.setxSpeed(0);
-            this.setySpeed(-1);
-        }else if (this.getX() < waypoints[index] && this.getY() == waypoints[index + 1]) {
-            this.setxSpeed(1);
-            this.setySpeed(0);
-        }else if (this.getX() > waypoints[index] && this.getY() == waypoints[index + 1]) {
-            this.setxSpeed(-1);
-            this.setySpeed(0);
-        }
     }
 
     public int getX() {
         return x;
-    }
-    public int getIndex() {
-        return index;
     }
     public int getY() {
         return y;
@@ -105,5 +88,27 @@ public class Tank {
     }
     public void setySpeed(int ySpeed) {
         this.ySpeed = ySpeed;
+    }
+    public void pathfind() {
+        if (this.getX() == waypoints[index] && this.getY() == waypoints[index + 1]) {
+            index += 2;
+        }
+        if (this.getX() == waypoints[index] && this.getY() < waypoints[index + 1]) {
+            this.setxSpeed(0);
+            this.setySpeed(1);
+        }else if (this.getX() == waypoints[index] && this.getY() > waypoints[index + 1]) {
+            this.setxSpeed(0);
+            this.setySpeed(-1);
+        }else if (this.getX() < waypoints[index] && this.getY() == waypoints[index + 1]) {
+            this.setxSpeed(1);
+            this.setySpeed(0);
+        }else if (this.getX() > waypoints[index] && this.getY() == waypoints[index + 1]) {
+            this.setxSpeed(-1);
+            this.setySpeed(0);
+        }
+    }
+
+    public int getIndex() {
+        return index;
     }
 }

@@ -1,14 +1,16 @@
 import processing.core.PApplet;
+import processing.core.PImage;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
-public class Tower {
-    private double range;
-    private int damage, upgradeCost, upgradeCount, x, y, tick, size;
-    private double fireRate;
+public class Tower extends PApplet{
+    protected double range;
+    protected int damage, upgradeCost, upgradeCount, x, y, tick, size;
+    protected double fireRate;
+    private PImage doctor;
 
-    public Tower(int dmg, double fr, int upgradeCost, int x, int y, double range, int upgradeCount){
+    public Tower(int dmg, double fr, int upgradeCost, int x, int y, double range, int upgradeCount, PApplet game){
         damage = dmg;
         fireRate = fr;
         this.upgradeCost = upgradeCost;
@@ -17,6 +19,8 @@ public class Tower {
         this.range = range;
         size = 30;
         upgradeCount = 0;
+        doctor = loadImage("Assets/doctor.png");
+
     }
 
     public void update(Game game, ArrayList<Tank> tanks){
@@ -32,12 +36,13 @@ public class Tower {
     public void draw(Game game){
         game.fill(40,40,40);
         game.rect(x,y,size,size);
+        game.image(this.doctor, x, y);
     }
 
     public void shoot(ArrayList<Tank> tanks, Game game){
         Tank currTarget = findTarget(tanks);
         if(currTarget != null){
-            Bullet bullet = new Bullet(currTarget, damage, x+(size/2), y+(size/2), (currTarget.getX()-x)/10, (currTarget.getY()-y)/10, 10);
+            Bullet bullet = new Bullet(currTarget, damage, x+(size/2), y+(size/2), (currTarget.getX()-x)/10, (currTarget.getY()-y)/10, 10, this);
             game.addToBulletList(bullet);
         }
     }

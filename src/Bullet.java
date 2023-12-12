@@ -1,11 +1,13 @@
 import processing.core.PApplet;
+import processing.core.PImage;
 
-public class Bullet {
-    private int damage, x, y, xSpeed, ySpeed, size;
-    private Tank target;
-    private boolean alive;
+public class Bullet extends PApplet{
+    protected int damage, x, y, xSpeed, ySpeed, size;
+    protected Tank target;
+    protected boolean alive;
+    private PImage pill;
 
-    public Bullet(Tank tank, int dmg, int x, int y, int xSpeed, int ySpeed, int size){
+    public Bullet(Tank tank, int dmg, int x, int y, int xSpeed, int ySpeed, int size, PApplet game){
         damage = dmg;
         this.x = x;
         this.y = y;
@@ -14,13 +16,13 @@ public class Bullet {
         this.size = size;
         target = tank;
         alive = true;
+        pill = loadImage("Assets/pill.png");
     }
 
     public void update(PApplet game){
         if(alive) {
             x += xSpeed;
             y += ySpeed;
-            draw(game);
             if(colliding()){
                 hit();
             }
@@ -39,6 +41,7 @@ public class Bullet {
     public void draw(PApplet game){
         game.fill(180,180,0);
         game.ellipse(x,y,size,size);
+        game.image(this.pill, x, y);
     }
 
 
@@ -50,4 +53,13 @@ public class Bullet {
     public boolean isAlive() {
         return alive;
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }
+
