@@ -3,7 +3,7 @@ import processing.core.PImage;
 
 import java.util.ArrayList;
 
-public class Tank extends  PApplet{
+public class Tank {
     private int health, x, y, xSpeed, ySpeed, size, startingHp, index;
     private boolean alive, boss;
     private PImage apple;
