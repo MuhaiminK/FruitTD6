@@ -23,8 +23,10 @@ public class Bullet {
         if(alive) {
             x += xSpeed;
             y += ySpeed;
+            draw(game);
             if(colliding()){
                 hit();
+
             }
         }
     }
