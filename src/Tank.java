@@ -5,9 +5,11 @@ public class Tank{
     private int health, x, y, xSpeed, ySpeed, size, startingHp, index;
     private boolean alive, boss;
     private PImage apple;
+
+    private static int killReward;
     private int[] waypoints = {225,400,225,250,375,250,375,575,175,575,175,725,675,725,675,525,525,525,525,325,725,325,725,125,900,125};
 
-    public Tank(int hp, int x, int y, int xS, int yS, int size, boolean boss, int index, PApplet game){
+    public Tank(int hp, int x, int y, int xS, int yS, int size, boolean boss, int index, PApplet game, int killReward){
         health = hp;
         startingHp = hp;
         this.x = x;
@@ -18,6 +20,7 @@ public class Tank{
         alive = true;
         this.boss = boss;
         this.index = index;
+        Tank.killReward = killReward;
         if(boss){
             apple = game.loadImage("Assets/greenApple.png");
         }else {
@@ -33,7 +36,7 @@ public class Tank{
             draw(PApplet);
             if (health <= 0){
                 alive = false;
-                return 20;
+                return killReward;
             } else return 0;
         }else{
             return 0;
@@ -111,5 +114,13 @@ public class Tank{
 
     public int getIndex() {
         return index;
+    }
+
+    public static int getKillReward() {
+        return killReward;
+    }
+
+    public static void increaseKillReward(int increase){
+        killReward += increase;
     }
 }

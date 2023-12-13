@@ -35,6 +35,12 @@ public class Tower{
         game.fill(40,40,40);
         game.rect(x,y,size,size);
         game.image(this.doctor, x, y,size,size);
+        game.stroke(255,0,0);
+        game.strokeWeight(2);
+        game.fill(0,0);
+        game.ellipse(x+size/2,y+size/2,(int)range*2+2,(int)range*2+2);
+        game.stroke(0,0,0);
+        game.strokeWeight(1);
     }
 
     public void shoot(ArrayList<Tank> tanks, Game game){
@@ -47,20 +53,20 @@ public class Tower{
 
 
     public Tank findTarget(ArrayList<Tank> tanks){
-        int distance = 0;
-        int closest = 1000;
+        float distance;
+        float closest = 1000;
         Tank target = null;
 
-        for(Tank tank: tanks){
-            distance+= Math.abs(tank.getX()-x);
-            distance+= Math.abs(tank.getY()-y);
-            if(distance<=range){
-                if(distance < closest){
+        for(Tank tank : tanks){
+            float run = Math.abs(x-tank.getX());
+            float rise = Math.abs(y-tank.getY());
+            distance = rise+run;
+            if (distance < closest){
+                if (range >= distance){
                     closest = distance;
                     target = tank;
                 }
             }
-            distance = 0;
         }
 
 
@@ -78,9 +84,9 @@ public class Tower{
             game.addMoney(-upgradeCost);
             upgradeCost += 100;
             damage += 5;
-            if(range <= 300) {
-                range += 75;
-            }else range = 300;
+            if(range <= 225) {
+                range += 25;
+            }else range = 250;
             fireRate += 0.5;
         }
 

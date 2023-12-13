@@ -6,14 +6,14 @@ import java.util.ArrayList;
 
 public class Game extends PApplet {
     // TODO: declare game variables
-    private int money, tickCount, towerCost, wave, round, initialTowerRange, tankSpawnHealth, health;
+    private int money, tickCount, towerCost, wave, round, initialTowerRange, tankSpawnHealth, health, killReward;
     private ArrayList<Tank> tankList;
     private ArrayList<Bullet> bulletList;
     private ArrayList<Tower> towerList;
     private boolean towerBuyMode, towerSellMode;
-    private int towers = 0;
-    Minim loader;
-    AudioPlayer moneySound;
+    private int towers;
+    private Minim loader;
+    private AudioPlayer moneySound;
 
     public void settings() {
         size(800, 800);
@@ -29,12 +29,14 @@ public class Game extends PApplet {
         towerCost = 100;
         wave = 1;
         round = 0;
-        initialTowerRange = 200;
+        initialTowerRange = 150;
         towerBuyMode = false;
         tankSpawnHealth = 100;
         health = 100;
         loader = new Minim(this);
         moneySound = loader.loadFile("Assets/money.wav");
+        towers = 0;
+        killReward = 20;
     }
 
     /***
@@ -61,7 +63,7 @@ public class Game extends PApplet {
             fill(0, 255, 0);
             textSize(24);
             text("Money: $" + money, 25, 50);
-            text("Tower cost: $100", 25, 100);
+            text("Tower cost: $" + towerCost, 25, 100);
             if(towerBuyMode){
                 fill(0,255,0);
                 text("Mode: Buying Towers", 240, 50);
@@ -81,14 +83,17 @@ public class Game extends PApplet {
             tickCount++;
             if (tickCount >= 60) {
                 tickCount = 0;
-                tankList.add(new Tank(tankSpawnHealth, 30, 400, 1, 0, 40, false, 0, this));
+                tankList.add(new Tank(tankSpawnHealth, 30, 400, 1, 0, 40, false, 0, this, killReward));
                 round++;
             }
             if (round >= 10) {
                 wave++;
                 if (wave % 5 == 0) {
                     //spawn boss
-                    tankList.add(new Tank((tankSpawnHealth * 5 ) + 500, 30, 400, 1, 0, 40, true, 0, this));
+                    killReward += 5;
+                    Tank.increaseKillReward(5);
+                    tankList.add(new Tank((tankSpawnHealth * 2 ) + 500, 30, 400, 1, 0, 40, true, 0, this, killReward*5));
+                    towerCost += 100;
                 }
                 tankSpawnHealth = 100 + wave * 50;
                 addMoney(150);
@@ -244,7 +249,7 @@ public class Game extends PApplet {
                     PrintWriter statSaver = new PrintWriter(new FileWriter("saveStats.txt"));
 
                     for (Tank tank : tankList) {
-                        tankSaver.println(tank.getHealth() + "," + tank.getX() + "," + tank.getY() + "," + tank.getxSpeed() + "," + tank.getySpeed() + "," + tank.getSize() + "," + tank.isBoss() + "," + tank.getIndex());
+                        tankSaver.println(tank.getHealth() + "," + tank.getX() + "," + tank.getY() + "," + tank.getxSpeed() + "," + tank.getySpeed() + "," + tank.getSize() + "," + tank.isBoss() + "," + tank.getIndex() + "," + Tank.getKillReward());
                     }
                     for (Tower tower : towerList) {
                         towerSaver.println(tower.getDamage() + "," + tower.getFireRate() + "," + tower.getUpgradeCost() + "," + tower.getX() + "," + tower.getY() + "," + tower.getRange() + "," + tower.getUpgradeCount());
@@ -273,7 +278,8 @@ public class Game extends PApplet {
                     int size = Integer.parseInt(vals[5]);
                     boolean boss = Boolean.parseBoolean(vals[6]);
                     int index = Integer.parseInt(vals[7]);
-                    Tank p = new Tank(health, x, y, xSpeed, ySpeed, size, boss, index, this);
+                    int reward = Integer.parseInt(vals[8]);
+                    Tank p = new Tank(health, x, y, xSpeed, ySpeed, size, boss, index, this, reward);
                     tankList.add(p);
                 }
             } catch (IOException e) {
