@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Bullet{
     private int damage, x, y, xSpeed, ySpeed, size, age;
-    private boolean alive;
+    private boolean alive, lowGFX;
     private PImage pill;
 
     public Bullet(int dmg, int x, int y, int xSpeed, int ySpeed, int size, PApplet game){
@@ -16,7 +16,12 @@ public class Bullet{
         this.ySpeed = ySpeed;
         this.size = size;
         alive = true;
-        pill = game.loadImage("Assets/pill.png");
+        if(!Game.isLowGraphicsMode()){
+            lowGFX = false;
+            pill = game.loadImage("Assets/pill.png");
+        }else{
+            lowGFX = true;
+        }
         age = 0;
     }
 
@@ -44,9 +49,12 @@ public class Bullet{
     }
 
     public void draw(PApplet game){
-        game.fill(180,180,0);
-        //game.ellipse(x,y,size,size);
-        game.image(this.pill, x-size/2, y-size/2,size*2,size*2);
+        if(lowGFX){
+            game.fill(180,180,0);
+            game.ellipse(x,y,size,size);
+        }else{
+            game.image(this.pill, x-size/2, y-size/2,size*2,size*2);
+        }
     }
 
 

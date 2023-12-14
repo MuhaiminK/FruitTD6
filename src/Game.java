@@ -18,6 +18,8 @@ public class Game extends PApplet {
     private AudioPlayer moneySound;
     private PImage mutedIcon;
 
+    private static boolean lowGraphicsMode = false;
+
     public void settings() {
         size(800, 800);
     }
@@ -79,9 +81,9 @@ public class Game extends PApplet {
                 text("Mode: Upgrading Towers", 240, 50);
             }
             fill(0);
-            text("Wave: " + wave, 575, 50);
-            fill(0,75,255);
-            text("Health: " + health, 575, 100);
+            text("Wave: " + wave, 570, 50);
+            fill(0,200,255);
+            text("Health: " + health, 570, 100);
             if(muted) {
                 image(mutedIcon, 10, 750, 50, 50);
             }
@@ -149,7 +151,7 @@ public class Game extends PApplet {
                         text("Upgrade Cost: $" + upgradeCost, tower.getX() - 50, tower.getY() - 10);
                     }
                 }else if(towerSellMode){
-                    text("Sell Price: $" + Math.abs((upgradeCost-100))/2, tower.getX() - 30, tower.getY() - 10);
+                    text("Sell Price: $" + Math.abs((towerCost + upgradeCost-100))/2, tower.getX() - 30, tower.getY() - 10);
                 }
             }
             if (tankHovered() != null) {
@@ -250,7 +252,9 @@ public class Game extends PApplet {
         }else if(key == 'x') {
             towerSellMode = !towerSellMode;
             towerBuyMode = false;
-        }else if(key == 'r') {
+        }else if(key == 'g'){
+            lowGraphicsMode = !lowGraphicsMode;
+        } else if(key == 'r') {
             setup();
         } else if (key == 's') {
             if(health > 0){
@@ -265,7 +269,7 @@ public class Game extends PApplet {
                     for (Tower tower : towerList) {
                         towerSaver.println(tower.getDamage() + "," + tower.getFireRate() + "," + tower.getUpgradeCost() + "," + tower.getX() + "," + tower.getY() + "," + tower.getRange() + "," + tower.getUpgradeCount());
                     }
-                    statSaver.println(money + "," + wave + "," + round + "," + health + "," + tickCount);
+                    statSaver.println(money + "," + wave + "," + round + "," + health + "," + tickCount + "," + towerCost);
                     tankSaver.close();
                     towerSaver.close();
                     statSaver.close();
@@ -285,6 +289,7 @@ public class Game extends PApplet {
                     round = Integer.parseInt(vals[2]);
                     health = Integer.parseInt(vals[3]);
                     tickCount = Integer.parseInt(vals[4]);
+                    towerCost = Integer.parseInt(vals[5]);
                 }
             } catch (IOException e){
                 e.printStackTrace();
@@ -333,6 +338,11 @@ public class Game extends PApplet {
             }
         }
     }
+
+    public static boolean isLowGraphicsMode() {
+        return lowGraphicsMode;
+    }
+
     public static void main(String[] args) {
         PApplet.main("Game");
     }

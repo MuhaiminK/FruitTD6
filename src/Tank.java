@@ -3,7 +3,7 @@ import processing.core.PImage;
 
 public class Tank{
     private int health, x, y, xSpeed, ySpeed, size, startingHp, index;
-    private boolean alive, boss;
+    private boolean alive, boss, lowGFX;
     private PImage apple;
 
     private static int killReward;
@@ -21,11 +21,17 @@ public class Tank{
         this.boss = boss;
         this.index = index;
         Tank.killReward = killReward;
-        if(boss){
-            apple = game.loadImage("Assets/greenApple.png");
-        }else {
-            apple = game.loadImage("Assets/apple.png");
+        if(!Game.isLowGraphicsMode()){
+            lowGFX = false;
+            if(boss){
+                apple = game.loadImage("Assets/greenApple.png");
+            }else {
+                apple = game.loadImage("Assets/apple.png");
+            }
+        }else{
+            lowGFX = true;
         }
+
     }
 
     public int update(PApplet PApplet){
@@ -48,13 +54,16 @@ public class Tank{
     }
 
     public void draw(PApplet game){
-        if(boss){
-            game.fill(150,0,200);
+        if(lowGFX){
+            if(boss){
+                game.fill(150,0,200);
+            }else{
+                game.fill(150,0,0);
+            }
+            game.ellipse(x,y,size,size);
         }else{
-            game.fill(150,0,0);
+            game.image(this.apple, x-size/2, y-size/2, size, size);
         }
-        game.image(this.apple, x-size/2, y-size/2, size, size);
-        //game.ellipse(x,y,size,size);
     }
 
     public int getX() {
