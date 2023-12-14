@@ -149,7 +149,7 @@ public class Game extends PApplet {
                         text("Upgrade Cost: $" + upgradeCost, tower.getX() - 50, tower.getY() - 10);
                     }
                 }else if(towerSellMode){
-                    text("Sell Price: $" + (upgradeCost-100)/2, tower.getX() - 30, tower.getY() - 10);
+                    text("Sell Price: $" + Math.abs((upgradeCost-100))/2, tower.getX() - 30, tower.getY() - 10);
                 }
             }
             if (tankHovered() != null) {
@@ -229,7 +229,7 @@ public class Game extends PApplet {
             }
         }else if(towerSellMode){
             if(canUpgradeTower()){
-                money += (towerHovered().getUpgradeCost()-100)/2;
+                money += Math.abs((towerCost+towerHovered().getUpgradeCost()-100))/2;
                 towerList.remove(towerHovered());
             }
         }else {
