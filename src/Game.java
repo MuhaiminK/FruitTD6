@@ -1,6 +1,8 @@
 import ddf.minim.AudioPlayer;
 import ddf.minim.Minim;
 import processing.core.PApplet;
+import processing.core.PImage;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -10,10 +12,11 @@ public class Game extends PApplet {
     private ArrayList<Tank> tankList;
     private ArrayList<Bullet> bulletList;
     private ArrayList<Tower> towerList;
-    private boolean towerBuyMode, towerSellMode;
+    private boolean towerBuyMode, towerSellMode, muted;
     private int towers;
     private Minim loader;
     private AudioPlayer moneySound;
+    private PImage mutedIcon;
 
     public void settings() {
         size(800, 800);
@@ -37,6 +40,7 @@ public class Game extends PApplet {
         moneySound = loader.loadFile("Assets/money.wav");
         towers = 0;
         killReward = 20;
+        mutedIcon = loadImage("Assets/mutedIcon.png");
     }
 
     /***
@@ -78,7 +82,9 @@ public class Game extends PApplet {
             text("Wave: " + wave, 575, 50);
             fill(0,75,255);
             text("Health: " + health, 575, 100);
-
+            if(muted) {
+                image(mutedIcon, 10, 750, 50, 50);
+            }
 
             tickCount++;
             if (tickCount >= 60) {
@@ -132,6 +138,7 @@ public class Game extends PApplet {
             }
             if (towerHovered() != null) {
                 Tower tower = towerHovered();
+                tower.setTowerHovered(true);
                 int upgradeCost = tower.getUpgradeCost();
                 fill(255, 255, 0);
                 textSize(14);
@@ -168,8 +175,10 @@ public class Game extends PApplet {
 
     public void addMoney(int cash) {
         if(cash > 0){
-            moneySound.play();
-            moneySound.rewind();
+            if(!muted){
+                moneySound.play();
+                moneySound.rewind();
+            }
         }
         money += cash;
     }
@@ -236,6 +245,8 @@ public class Game extends PApplet {
         if (key == 'z') {
             towerBuyMode = !towerBuyMode;
             towerSellMode = false;
+        }else if(key == 'm'){
+            muted = !muted;
         }else if(key == 'x') {
             towerSellMode = !towerSellMode;
             towerBuyMode = false;
@@ -263,6 +274,21 @@ public class Game extends PApplet {
                 }
             }
         }else if (key == 'l') {
+            //load stats
+            try{
+                BufferedReader in = new BufferedReader(new FileReader("saveStats.txt"));
+                String line;
+                while((line = in.readLine()) != null){
+                    String[] vals = line.split(",");
+                    money = Integer.parseInt(vals[0]);
+                    wave = Integer.parseInt(vals[1]);
+                    round = Integer.parseInt(vals[2]);
+                    health = Integer.parseInt(vals[3]);
+                    tickCount = Integer.parseInt(vals[4]);
+                }
+            } catch (IOException e){
+                e.printStackTrace();
+            }
             //load tanks
             try {
                 BufferedReader in = new BufferedReader(new FileReader("saveTanks.txt"));
@@ -303,21 +329,6 @@ public class Game extends PApplet {
                     towerList.add(p);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //load stats
-            try{
-                BufferedReader in = new BufferedReader(new FileReader("saveStats.txt"));
-                String line;
-                while((line = in.readLine()) != null){
-                    String[] vals = line.split(",");
-                    money = Integer.parseInt(vals[0]);
-                    wave = Integer.parseInt(vals[1]);
-                    round = Integer.parseInt(vals[2]);
-                    health = Integer.parseInt(vals[3]);
-                    tickCount = Integer.parseInt(vals[4]);
-                }
-            } catch (IOException e){
                 e.printStackTrace();
             }
         }

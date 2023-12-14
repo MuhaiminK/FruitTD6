@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 public class Tower{
-    protected double range;
-    protected int damage, upgradeCost, upgradeCount, x, y, tick, size;
-    protected double fireRate;
+    private double range;
+    private int damage, upgradeCost, upgradeCount, x, y, tick, size;
+    private double fireRate;
     private PImage doctor;
+    private boolean towerHovered;
 
     public Tower(int dmg, double fr, int upgradeCost, int x, int y, double range, int upgradeCount, PApplet game){
         damage = dmg;
@@ -19,6 +20,7 @@ public class Tower{
         size = 50;
         this.upgradeCount = upgradeCount;
         doctor = game.loadImage("Assets/doctor.png");
+        towerHovered = false;
     }
 
     public void update(Game game, ArrayList<Tank> tanks){
@@ -35,12 +37,15 @@ public class Tower{
         game.fill(40,40,40);
         game.rect(x,y,size,size);
         game.image(this.doctor, x, y,size,size);
-        game.stroke(255,0,0);
-        game.strokeWeight(2);
-        game.fill(0,0);
-        game.ellipse(x+size/2,y+size/2,(int)range*2+2,(int)range*2+2);
-        game.stroke(0,0,0);
-        game.strokeWeight(1);
+        if(towerHovered) {
+            game.stroke(255, 0, 0);
+            game.strokeWeight(2);
+            game.fill(0, 0);
+            game.ellipse(x + size / 2, y + size / 2, (int) range * 2 + 2, (int) range * 2 + 2);
+            game.stroke(0, 0, 0);
+            game.strokeWeight(1);
+            towerHovered = false;
+        }
     }
 
     public void shoot(ArrayList<Tank> tanks, Game game){
@@ -112,5 +117,8 @@ public class Tower{
     }
     public double getFireRate() {
         return fireRate;
+    }
+    public void setTowerHovered(boolean towerHovered) {
+        this.towerHovered = towerHovered;
     }
 }

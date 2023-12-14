@@ -4,8 +4,8 @@ import processing.core.PImage;
 import java.util.ArrayList;
 
 public class Bullet{
-    int damage, x, y, xSpeed, ySpeed, size, age;
-    boolean alive;
+    private int damage, x, y, xSpeed, ySpeed, size, age;
+    private boolean alive;
     private PImage pill;
 
     public Bullet(int dmg, int x, int y, int xSpeed, int ySpeed, int size, PApplet game){
