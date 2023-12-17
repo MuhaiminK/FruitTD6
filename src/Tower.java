@@ -10,7 +10,7 @@ public class Tower{
     private PImage doctor;
     private boolean towerHovered;
 
-    public Tower(int dmg, double fr, int upgradeCost, int x, int y, double range, int upgradeCount, PApplet game, int tick){
+    public Tower(int dmg, double fr, int upgradeCost, int x, int y, double range, int upgradeCount, PApplet game){
         damage = dmg;
         fireRate = fr;
         this.upgradeCost = upgradeCost;
@@ -21,18 +21,15 @@ public class Tower{
         this.upgradeCount = upgradeCount;
         doctor = game.loadImage("Assets/doctor.png");
         towerHovered = false;
-        this.tick = tick;
     }
 
     public void update(Game game, ArrayList<Tank> tanks){
-        if(findTarget(tanks) != null){
-            if(tick*fireRate >= 60){
-                shoot(tanks, game);
-                tick = 0;
-            }
-        }
         tick++;
         draw(game);
+        if(tick*fireRate >= 60){
+        shoot(tanks, game);
+        tick = 0;
+        }
     }
 
 
@@ -44,7 +41,7 @@ public class Tower{
             game.stroke(255, 0, 0);
             game.strokeWeight(2);
             game.fill(0, 0);
-            game.ellipse(x + size / 2, y + size / 2, (int)range*2, (int)range*2);
+            game.ellipse(x + size / 2, y + size / 2, (int) range * 2 + 2, (int) range * 2 + 2);
             game.stroke(0, 0, 0);
             game.strokeWeight(1);
             towerHovered = false;
@@ -54,7 +51,7 @@ public class Tower{
     public void shoot(ArrayList<Tank> tanks, Game game){
         Tank currTarget = findTarget(tanks);
         if(currTarget != null){
-            Bullet bullet = new Bullet(damage, x+(size/2), y+(size/2), (currTarget.getX()-(x+size/2))/10, (currTarget.getY()-(y+size/2))/10, 10, game);
+            Bullet bullet = new Bullet(damage, x+(size/2), y+(size/2), (currTarget.getX()-x + currTarget.getxSpeed()*10)/10, (currTarget.getY()-y + currTarget.getySpeed()*10)/10, 10, game);
             game.addToBulletList(bullet);
         }
     }
@@ -66,8 +63,8 @@ public class Tower{
         Tank target = null;
 
         for(Tank tank : tanks){
-            float run = Math.abs((x+size/2)-tank.getX());
-            float rise = Math.abs((y+size/2)-tank.getY());
+            float run = Math.abs(x-tank.getX());
+            float rise = Math.abs(y-tank.getY());
             distance = rise+run;
             if (distance < closest){
                 if (range >= distance){
@@ -123,9 +120,5 @@ public class Tower{
     }
     public void setTowerHovered(boolean towerHovered) {
         this.towerHovered = towerHovered;
-    }
-
-    public int getTick() {
-        return tick;
     }
 }
