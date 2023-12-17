@@ -64,6 +64,8 @@ public class Game extends PApplet {
             rect(550, 300, 150, 50, 0, 0, 0, 0);
             rect(700, 100, 50, 250, 10, 10, 10, 0);
             rect(700, 100, 700, 50, 10, 0, 0, 0);
+
+            //GUI
             fill(0, 255, 0);
             textSize(24);
             text("Money: $" + money, 25, 50);
@@ -86,6 +88,7 @@ public class Game extends PApplet {
                 image(mutedIcon, 10, 750, 50, 50);
             }
 
+            //tank spawning
             tickCount++;
             if (tickCount >= 60) {
                 tickCount = 0;
@@ -105,6 +108,7 @@ public class Game extends PApplet {
                 addMoney(150);
                 round = 0;
             }
+
             //loop through tanks
             for (int i = 0; i < tankList.size() - 1; i++) {
                 Tank tank = tankList.get(i);
@@ -119,23 +123,23 @@ public class Game extends PApplet {
                 }
                 addMoney(tank.update(this));
             }
+
             //loop through bullets
             for (int i = 0; i < bulletList.size() - 1; i++) {
                 Bullet bullet = bulletList.get(i);
-                if(bullet.getX() > 800 || bullet.getX() < 0 || bullet.getY() > 800 || bullet.getY() < 0){
+                if(bullet.getX() > 800 || bullet.getX() < 0 || bullet.getY() > 800 || bullet.getY() < 0 || !bullet.isAlive()){
                     bulletList.remove(bullet);
                     i--;
                 }
                 bullet.update(this, tankList);
-                if (!bullet.isAlive()) {
-                    bulletList.remove(bullet);
-                    i--;
-                }
+
             }
+
             //loop through towers
             for (Tower tower : towerList) {
                 tower.update(this, tankList);
             }
+
             if (towerHovered() != null) {
                 Tower tower = towerHovered();
                 tower.setTowerHovered(true);
@@ -160,9 +164,6 @@ public class Game extends PApplet {
                 text(health + "/" + tank.getStartingHp(), tank.getX() - 40, tank.getY() + 50);
             }
         }else{
-            if(round > 11){
-                round = 0;
-            }
             fill(255,0,0);
             textSize(50);
             text("YOU DIED L", 250,400);
@@ -189,7 +190,7 @@ public class Game extends PApplet {
 
     public void buyTower() {
         if (money >= towerCost && towers < wave+2) {
-            towerList.add(new Tower(34, 1, 50, mouseX-25, mouseY-25, initialTowerRange, 0, this));
+            towerList.add(new Tower(34, 1, 50, mouseX-25, mouseY-25, initialTowerRange, 0, this, 60));
             money -= towerCost;
             towers++;
         }
@@ -263,7 +264,7 @@ public class Game extends PApplet {
                         tankSaver.println(tank.getHealth() + "," + tank.getX() + "," + tank.getY() + "," + tank.getxSpeed() + "," + tank.getySpeed() + "," + tank.getSize() + "," + tank.isBoss() + "," + tank.getIndex() + "," + Tank.getKillReward());
                     }
                     for (Tower tower : towerList) {
-                        towerSaver.println(tower.getDamage() + "," + tower.getFireRate() + "," + tower.getUpgradeCost() + "," + tower.getX() + "," + tower.getY() + "," + tower.getRange() + "," + tower.getUpgradeCount());
+                        towerSaver.println(tower.getDamage() + "," + tower.getFireRate() + "," + tower.getUpgradeCost() + "," + tower.getX() + "," + tower.getY() + "," + tower.getRange() + "," + tower.getUpgradeCount() + "," + tower.getTick());
                     }
                     statSaver.println(money + "," + wave + "," + round + "," + health + "," + tickCount);
                     tankSaver.close();
@@ -325,7 +326,8 @@ public class Game extends PApplet {
                     int y = Integer.parseInt(vals[4]);
                     double range = Double.parseDouble(vals[5]);
                     int upgradeCount = Integer.parseInt(vals[6]);
-                    Tower p = new Tower(dmg, fr, upgradeCost, x, y, range, upgradeCount, this);
+                    int tick = Integer.parseInt(vals[7]);
+                    Tower p = new Tower(dmg, fr, upgradeCost, x, y, range, upgradeCount, this, tick);
                     towerList.add(p);
                 }
             } catch (IOException e) {

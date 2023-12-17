@@ -4,7 +4,7 @@ import processing.core.PImage;
 import java.util.ArrayList;
 
 public class Bullet{
-    private int damage, x, y, xSpeed, ySpeed, size, age;
+    private int damage, x, y, xSpeed, ySpeed, size;
     private boolean alive;
     private PImage pill;
 
@@ -17,12 +17,10 @@ public class Bullet{
         this.size = size;
         alive = true;
         pill = game.loadImage("Assets/pill.png");
-        age = 0;
     }
 
     public void update(PApplet game, ArrayList<Tank> tankList){
         if(alive) {
-            age++;
             x += xSpeed;
             y += ySpeed;
             draw(game);
@@ -35,7 +33,7 @@ public class Bullet{
     }
 
     public boolean colliding(Tank target){
-        return  size + target.getSize()-2 >= distance(target);
+        return  size + target.getSize()-5 >= distance(target);
     }
     private double distance(Tank target){
         float run = Math.abs(x-target.getX());
