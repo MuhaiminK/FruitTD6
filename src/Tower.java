@@ -10,7 +10,7 @@ public class Tower{
     private PImage doctor;
     private boolean towerHovered;
 
-    public Tower(int dmg, double fr, int upgradeCost, int x, int y, double range, int upgradeCount, PApplet game){
+    public Tower(int dmg, double fr, int upgradeCost, int x, int y, double range, int upgradeCount, PApplet game, int tick){
         damage = dmg;
         fireRate = fr;
         this.upgradeCost = upgradeCost;
@@ -21,14 +21,15 @@ public class Tower{
         this.upgradeCount = upgradeCount;
         doctor = game.loadImage("Assets/doctor.png");
         towerHovered = false;
+        this.tick = tick;
     }
 
     public void update(Game game, ArrayList<Tank> tanks){
         tick++;
         draw(game);
         if(tick*fireRate >= 60){
-        shoot(tanks, game);
-        tick = 0;
+            shoot(tanks, game);
+            tick = 0;
         }
     }
 
@@ -120,5 +121,9 @@ public class Tower{
     }
     public void setTowerHovered(boolean towerHovered) {
         this.towerHovered = towerHovered;
+    }
+
+    public int getTick() {
+        return tick;
     }
 }
